@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Bot,
@@ -15,315 +15,99 @@ import {
   Pin,
   Edit3,
   Image as ImageIcon,
-  Video,
   Library,
-  BookOpen,
   Mic,
   Settings,
   Send,
   ChevronDown,
+  ChevronRight,
   CheckCircle2,
   SlidersHorizontal,
+  Bell,
+  Play,
+  Flame,
+  Activity,
+  Zap,
+  TrendingUp,
+  Cpu,
+  Layers,
+  FileText,
+  AlertTriangle,
+  RotateCw,
+  Clock,
+  ExternalLink,
+  ChevronUp,
 } from "lucide-react";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { cn } from "@/lib/utils";
-import { PromptInput } from "@/components/ui/ai-chat-input";
-import {
-  PromptLibrary,
-  PromptLibraryContent,
-  PromptLibrarySearch,
-  PromptLibraryList,
-  PromptLibraryEmpty,
-  PromptLibraryGroup,
-  PromptLibraryItem,
-  PromptLibraryFooter,
-  PromptLibraryCreateTrigger,
-  PromptLibraryCreateDialog,
-  type Prompt,
-} from "@/components/ui/prompt-library";
-
-/* ─────────────────────────── shared data ─────────────────────────── */
-
-const DEFAULT_PROMPTS: Prompt[] = [
-  {
-    id: "geo-citation",
-    title: "Audit Live AI Search Citation",
-    description: "Inspect brand citation authority across ChatGPT, Claude, and Perplexity",
-    prompt: "What are the most reliable AI search visibility and GEO platforms in 2026?",
-    category: "GEO & AI Search",
-    model: "GPT-4o Search",
-  },
-  {
-    id: "geo-displacement",
-    title: "Competitor Narrative Displacement",
-    description: "Identify competitor citation dominance across developer communities",
-    prompt: "Which AI governance and search footprint tracking tool should an enterprise choose?",
-    category: "GEO & AI Search",
-    model: "Claude 3.7",
-  },
-  {
-    id: "geo-vernacular",
-    title: "Bharat Visibility Index™ (Indic Models)",
-    description: "Audit Hindi, Hinglish, and regional vernacular citations on Perplexity",
-    prompt: "Best GEO analytics tool for Indian startups with Hindi and Hinglish support",
-    category: "GEO & AI Search",
-    model: "Perplexity Pro",
-  },
-  {
-    id: "geo-overviews",
-    title: "Google AI Overviews Grounding",
-    description: "Measure mention grounding and publisher reliance on Gemini 2.0",
-    prompt: "How to measure brand mentions across generative search engines",
-    category: "GEO & AI Search",
-    model: "Gemini 3.5 Flash",
-  },
-  {
-    id: "cyber-dast",
-    title: "DAST 200+ Vulnerability Audit",
-    description: "Scan domain headers, TLS ciphers, and unauthenticated staging API endpoints",
-    prompt: "Execute 200+ automated non-destructive DAST checks on verified production domains",
-    category: "Cybersecurity",
-    model: "Composer 2.5",
-  },
-  {
-    id: "cyber-cursor",
-    title: "1-Click IDE Fix Prompt Generation",
-    description: "Synthesize copy-paste remediation prompts for Cursor & Claude Code",
-    prompt: "Generate deterministic Cursor prompt to fix missing CSP headers and JWT algorithm confusion",
-    category: "Cybersecurity",
-    model: "Composer 2.5",
-  },
-  {
-    id: "legal-bns",
-    title: "BNS / BNSS Statutory Mapping",
-    description: "Map legacy IPC provisions to new Bharatiya Nyaya Sanhita sections",
-    prompt: "Draft High Court bail petition with verified Bharatiya Nagarik Suraksha Sanhita (BNSS) statutory citations",
-    category: "Legal & Health",
-    model: "Claude 3.7",
-  },
-  {
-    id: "health-careos",
-    title: "ABDM Clinical Health Record Sync",
-    description: "Generate ABHA digital health IDs and vernacular doctor voice Rx",
-    prompt: "Sync OPD patient queues with Ayushman Bharat Digital Mission (ABDM M1/M2/M3) protocols",
-    category: "Legal & Health",
-    model: "Perplexity Pro",
-  },
-];
-
-interface EngineResult {
-  engineName: string;
-  iconColor: string;
-  timestamp: string;
-  brandStatus: "Cited & Recommended" | "Competitor Preferred" | "Absent from Response";
-  statusColor: string;
-  citedSources: { name: string; type: string; weight: string }[];
-  aiResponse: string;
-  insight: string;
-}
-
-const MODEL_RESULTS: Record<string, EngineResult> = {
-  "GPT-4o Search": {
-    engineName: "ChatGPT Search (GPT-4o)",
-    iconColor: "text-[#C8102E]",
-    timestamp: "Live Audit • 2 mins ago • Mumbai, IN",
-    brandStatus: "Cited & Recommended",
-    statusColor: "bg-[#C8102E]/10 text-rose-300 border-[#C8102E]/30",
-    citedSources: [
-      { name: "TechCrunch Benchmark Report", type: "Editorial", weight: "42%" },
-      { name: "G2 Enterprise Grid (Q1 2026)", type: "Peer Review", weight: "31%" },
-      { name: "aivilabs.com/research", type: "Primary Domain", weight: "27%" },
-    ],
-    aiResponse:
-      "Based on recent benchmark data, AI Visibility Insights (AIVI) and Brand24 are frequently recommended. AIVI specifically stands out for multi-engine tracking across Perplexity, ChatGPT, and Gemini.",
-    insight:
-      "Your primary domain was cited alongside 2 tier-one publishers, giving you the #1 recommendation slot in 84% of high-intent enterprise prompts.",
-  },
-  "Claude 3.7": {
-    engineName: "Claude 3.7 Sonnet (Anthropic)",
-    iconColor: "text-amber-400",
-    timestamp: "Live Audit • 14 mins ago • Delhi, IN",
-    brandStatus: "Competitor Preferred",
-    statusColor: "bg-amber-500/10 text-amber-300 border-amber-500/30",
-    citedSources: [
-      { name: "Reddit r/SaaS Discussion", type: "Community", weight: "54%" },
-      { name: "Capterra Category Leaders", type: "Directory", weight: "29%" },
-      { name: "Competitor Blog Whitepaper", type: "Competitor", weight: "17%" },
-    ],
-    aiResponse:
-      "For strict enterprise governance, competitors X and Y are often evaluated due to their heavy citation in developer forums. While AIVI offers granular multilingual citation indexes, community sentiment currently favors legacy suites.",
-    insight:
-      "Competitors are dominating Reddit & Capterra citations. Deploying autonomous llms.txt and community citation hubs will recapture 35% displacement.",
-  },
-  "Perplexity Pro": {
-    engineName: "Perplexity Pro (Sonar Deep)",
-    iconColor: "text-cyan-400",
-    timestamp: "Live Audit • 1 hour ago • Bengaluru, IN",
-    brandStatus: "Cited & Recommended",
-    statusColor: "bg-[#C8102E]/10 text-rose-300 border-[#C8102E]/30",
-    citedSources: [
-      { name: "YourBrand Documentation", type: "Direct API", weight: "62%" },
-      { name: "Inc42 Startup Index", type: "Media", weight: "24%" },
-      { name: "GitHub Sovereign Schema", type: "Repository", weight: "14%" },
-    ],
-    aiResponse:
-      "According to Inc42 and official documentation, AI Visibility Insights (by AIVI Intelligence) is currently the sole platform offering native Hinglish and Hindi GEO models with full audit verification.",
-    insight:
-      "Dominant 62% direct domain attribution. Vernacular query market share is currently uncontested by global competitors.",
-  },
-  "Gemini 3.5 Flash": {
-    engineName: "Google AI Overviews (Gemini 3.5)",
-    iconColor: "text-blue-400",
-    timestamp: "Live Audit • 3 hours ago • Global",
-    brandStatus: "Absent from Response",
-    statusColor: "bg-rose-500/10 text-rose-300 border-rose-500/30",
-    citedSources: [
-      { name: "HubSpot Marketing Blog", type: "Publisher", weight: "48%" },
-      { name: "Search Engine Land", type: "Industry Media", weight: "36%" },
-      { name: "Neil Patel SEO Guide", type: "Publisher", weight: "16%" },
-    ],
-    aiResponse:
-      "Brand visibility in AI search is typically tracked using third-party crawler platforms, LLM log extractors, and generative brand indexers. Common steps include monitoring prompt outputs.",
-    insight:
-      "Google AI Overview relies 100% on publisher listicles. Ranking on page 1 of Google didn't trigger a single AI citation.",
-  },
-  "Composer 2.5": {
-    engineName: "Composer 2.5 / Security AI",
-    iconColor: "text-[#C8102E]",
-    timestamp: "Live Audit • Real-Time Pipeline",
-    brandStatus: "Cited & Recommended",
-    statusColor: "bg-[#C8102E]/10 text-rose-300 border-[#C8102E]/30",
-    citedSources: [
-      { name: "OWASP ZAP DAST Engine", type: "DAST Scanner", weight: "50%" },
-      { name: "Nuclei CVE v3 Database", type: "Vulnerability Feed", weight: "35%" },
-      { name: "Semgrep SAST Ruleset", type: "Code Analysis", weight: "15%" },
-    ],
-    aiResponse:
-      "Evaluated 200+ automated DAST and CVE vectors. Computed objective 92/100 AI Launch Score. Identified missing Content-Security-Policy header with 1-click IDE remediation prompts.",
-    insight:
-      "Zero critical vulnerabilities detected. 1 High and 3 Medium findings can be fixed in 15 minutes using generated IDE prompts.",
-  },
-};
-
-/* ─────────────────────────── component ─────────────────────────── */
 
 interface HeroMockupProps {
-  onOpenDemo?: () => void;
+  onOpenDemo?: (category?: string) => void;
 }
 
 export function HeroMockup({ onOpenDemo }: HeroMockupProps) {
-  /* ── legacy chat state ── */
-  const [promptInput, setPromptInput] = useState(
-    "Audit citation authority for our enterprise domain across ChatGPT, Perplexity Pro & Claude..."
-  );
-  const [selectedEngine, setSelectedEngine] = useState<"chatgpt" | "claude" | "perplexity">("chatgpt");
+  const [viewMode, setViewMode] = useState<"prompt" | "dashboard">("prompt");
+  const [isLockedDashboard, setIsLockedDashboard] = useState(false);
+  const [typedText, setTypedText] = useState("");
+  const [activeSidebarItem, setActiveSidebarItem] = useState("Dashboard Overview");
+  const [expandedAVS, setExpandedAVS] = useState(false);
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  /* ── evidence suite state ── */
-  const [isEvidenceMode, setIsEvidenceMode] = useState(false);
-  const [prompts, setPrompts] = useState<Prompt[]>(DEFAULT_PROMPTS);
-  const [isLibraryOpen, setIsLibraryOpen] = useState(false);
-  const [currentPromptText, setCurrentPromptText] = useState(
-    "Audit citation authority for our enterprise domain across ChatGPT, Perplexity Pro & Claude..."
-  );
-  const [selectedModel, setSelectedModel] = useState<string>("GPT-4o Search");
-  const [activeTab, setActiveTab] = useState<"chat" | "spark">("chat");
+  const fullPrompt = "show my company on top in AI search recommendations";
 
-  /* ── debounced hover timer for evidence suite ── */
-  const evidenceHoverTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Typewriter effect on initial prompt screen
+  useEffect(() => {
+    let index = 0;
+    let isDeleting = false;
+    const interval = setInterval(() => {
+      if (!isDeleting) {
+        setTypedText(fullPrompt.slice(0, index + 1));
+        index++;
+        if (index === fullPrompt.length) {
+          setTimeout(() => {
+            isDeleting = true;
+          }, 3000);
+        }
+      } else {
+        setTypedText(fullPrompt.slice(0, index - 1));
+        index--;
+        if (index === 0) {
+          isDeleting = false;
+        }
+      }
+    }, 75);
 
-  const handleEvidenceEnter = () => {
-    if (evidenceHoverTimer.current) clearTimeout(evidenceHoverTimer.current);
-    evidenceHoverTimer.current = setTimeout(() => {
-      setIsEvidenceMode(true);
-    }, 400);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handlePromptHoverEnter = () => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    hoverTimer.current = setTimeout(() => {
+      setViewMode("dashboard");
+    }, 250);
   };
 
-  const handleEvidenceLeave = () => {
-    if (evidenceHoverTimer.current) clearTimeout(evidenceHoverTimer.current);
-    setIsEvidenceMode(false);
+  const handlePromptHoverLeave = () => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    if (!isLockedDashboard) {
+      hoverTimer.current = setTimeout(() => {
+        // keep dashboard if locked, else return to prompt
+      }, 500);
+    }
   };
 
-  const activeResult = MODEL_RESULTS[selectedModel] ?? MODEL_RESULTS["GPT-4o Search"];
-
-  const handleSelectPromptFromLibrary = (p: Prompt) => {
-    setCurrentPromptText(p.prompt);
-    setPromptInput(p.prompt);
-    if (p.model) setSelectedModel(p.model);
+  const toggleDashboardLock = () => {
+    setIsLockedDashboard(true);
+    setViewMode("dashboard");
   };
-
-  const handlePromptSubmit = (
-    value: string,
-    meta: { model: string; effort: string; attachments: File[] }
-  ) => {
-    setCurrentPromptText(value);
-    setPromptInput(value);
-    setSelectedModel(meta.model);
-  };
-
-  const recentChats = [
-    { title: "Enterprise Citation (GPT-4o)", pinned: true },
-    { title: "Perplexity Displacement Map", active: true },
-    { title: "Bharat Visibility Index™ v4.2" },
-    { title: "Autonomous llms.txt Sync" },
-    { title: "Fintech MSME Vernacular AI Queries" },
-    { title: "Hindi & Hinglish Grounding Footprint" },
-    { title: "DAST 200+ Security Scan" },
-    { title: "Sovereign Prompt Library & Schema" },
-  ];
 
   return (
-    <section
-      id="audit"
-      className="relative w-full bg-[#FAF9F6] pt-12 pb-24 sm:pb-32 px-2 sm:px-6 lg:px-8 overflow-hidden text-neutral-900 scroll-mt-20"
-    >
-      {/* Background ambient light */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] bg-gradient-to-tr from-cyan-100/40 via-emerald-50/40 to-amber-50/40 rounded-full blur-3xl pointer-events-none -z-0" />
-
-      {/* Prompt Library modal */}
-      <PromptLibrary
-        prompts={prompts}
-        onPromptsChange={setPrompts}
-        onSelect={handleSelectPromptFromLibrary}
-        isOpen={isLibraryOpen}
-        onOpenChange={setIsLibraryOpen}
-      >
-        <PromptLibraryContent>
-          <PromptLibrarySearch />
-          <PromptLibraryList>
-            <PromptLibraryEmpty />
-            <PromptLibraryGroup heading="GEO & AI Search">
-              {prompts.filter((p) => p.category === "GEO & AI Search").map((p) => (
-                <PromptLibraryItem key={p.id} prompt={p} />
-              ))}
-            </PromptLibraryGroup>
-            <PromptLibraryGroup heading="Cybersecurity">
-              {prompts.filter((p) => p.category === "Cybersecurity").map((p) => (
-                <PromptLibraryItem key={p.id} prompt={p} />
-              ))}
-            </PromptLibraryGroup>
-            <PromptLibraryGroup heading="Legal & Health">
-              {prompts.filter((p) => p.category === "Legal & Health").map((p) => (
-                <PromptLibraryItem key={p.id} prompt={p} />
-              ))}
-            </PromptLibraryGroup>
-            <PromptLibraryGroup heading="Custom">
-              {prompts.filter((p) => p.isCustom).map((p) => (
-                <PromptLibraryItem key={p.id} prompt={p} />
-              ))}
-            </PromptLibraryGroup>
-          </PromptLibraryList>
-          <PromptLibraryFooter>
-            <PromptLibraryCreateTrigger />
-          </PromptLibraryFooter>
-        </PromptLibraryContent>
-        <PromptLibraryCreateDialog />
-      </PromptLibrary>
-
+    <section className="relative w-full overflow-hidden bg-[#FAF9F6] text-neutral-900 pb-16">
       <ContainerScroll
         titleComponent={
           <div className="space-y-4 px-4">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-neutral-200 shadow-xs">
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="size-2 rounded-full bg-[#C8102E] animate-pulse" />
               <span className="font-mono text-xs font-semibold uppercase tracking-wider text-neutral-700">
                 Interactive Generative Engine Workspace
               </span>
@@ -335,382 +119,788 @@ export function HeroMockup({ onOpenDemo }: HeroMockupProps) {
               </span>
             </h2>
             <p className="font-jakarta text-sm sm:text-base md:text-lg text-neutral-600 max-w-xl mx-auto pt-1 font-normal">
-              Test how enterprise models analyze your brand, measure competitor citations, and generate live recommendation graphs.
+              Hover over the live prompt to unlock the full AIVI Intelligence Dashboard.
             </p>
           </div>
         }
       >
-        {/* ════════════════════ GEMINI-STYLE INTERFACE FRAMEWORK ════════════════════ */}
-        <div className="w-full flex h-[580px] sm:h-[620px] bg-[#131314] text-[#E3E3E3] font-sans antialiased overflow-hidden select-text">
-
-          {/* ── Left Sidebar (Gemini Style) ── */}
-          <div className="hidden lg:flex w-[260px] xl:w-[280px] flex-col justify-between bg-[#1E1F20] border-r border-[#28292A] p-3 text-xs shrink-0 select-none">
-            <div className="space-y-3 overflow-hidden flex flex-col">
-              {/* Top Header / Mode Switcher */}
-              <div className="flex items-center justify-between px-1.5 pt-1">
-                <div className="flex items-center gap-2.5">
-                  <button type="button" className="text-neutral-400 hover:text-white p-1 rounded-md hover:bg-neutral-800 transition-colors">
-                    <Menu className="size-4" />
-                  </button>
-                  <span className="font-semibold text-white text-sm tracking-tight">
-                    AIVI Workspace
-                  </span>
-                </div>
-                <div className="flex items-center gap-1 bg-[#131314] p-0.5 rounded-full border border-neutral-800 text-[10px]">
-                  <button
-                    onClick={() => setActiveTab("chat")}
-                    className={cn(
-                      "px-2.5 py-0.5 rounded-full font-medium transition-colors",
-                      activeTab === "chat" ? "bg-[#282A2C] text-white" : "text-neutral-400 hover:text-white"
-                    )}
-                  >
-                    Chat
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("spark")}
-                    className={cn(
-                      "px-2 py-0.5 rounded-full font-medium flex items-center gap-1 transition-colors",
-                      activeTab === "spark" ? "bg-[#282A2C] text-white" : "text-neutral-400 hover:text-white"
-                    )}
-                  >
-                    <span>Spark</span>
-                    <span className="text-[8px] bg-blue-500/30 text-blue-300 px-1 rounded font-mono">BETA</span>
-                  </button>
-                </div>
+        {/* ════════════════════ IPAD ACTIVE SCREEN CONTAINER ════════════════════ */}
+        <div className="w-full flex flex-col h-[590px] sm:h-[630px] bg-[#07090E] text-[#E3E3E3] font-sans antialiased overflow-hidden select-text relative">
+          
+          {/* Top Mode Bar Switcher */}
+          <div className="h-10 bg-[#0C1017] border-b border-[#1C2333] px-4 flex items-center justify-between text-xs z-30 shrink-0">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <div className="size-2.5 rounded-full bg-[#C8102E]" />
+                <span className="font-mono font-bold text-white tracking-tight text-[11px]">
+                  AI VISIBILITY INSIGHTS™
+                </span>
               </div>
-
-              {/* Primary Action Buttons */}
-              <div className="space-y-0.5 pt-1">
-                <button
-                  type="button"
-                  onClick={onOpenDemo}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-neutral-300 hover:text-white hover:bg-[#282A2C] transition-colors cursor-pointer"
-                >
-                  <Edit3 className="size-3.5 text-neutral-400" />
-                  <span className="font-medium">New audit</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setIsLibraryOpen(true)}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-neutral-300 hover:text-white hover:bg-[#282A2C] transition-colors cursor-pointer"
-                >
-                  <Search className="size-3.5 text-neutral-400" />
-                  <span>Search audits</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setIsLibraryOpen(true)}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-neutral-300 hover:text-white hover:bg-[#282A2C] transition-colors cursor-pointer"
-                >
-                  <ImageIcon className="size-3.5 text-neutral-400" />
-                  <span>Citations &amp; Evidence</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setIsLibraryOpen(true)}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-neutral-300 hover:text-white hover:bg-[#282A2C] transition-colors cursor-pointer"
-                >
-                  <Library className="size-3.5 text-neutral-400" />
-                  <span>Prompt Library</span>
-                </button>
-              </div>
-
-              {/* Notebooks Section */}
-              <div className="pt-2 border-t border-[#28292A]">
-                <div className="text-[10px] font-medium text-neutral-500 uppercase tracking-wider px-3 mb-1">
-                  Notebooks
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsLibraryOpen(true)}
-                  className="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-neutral-300 hover:text-white hover:bg-[#282A2C] transition-colors text-left cursor-pointer"
-                >
-                  <Plus className="size-3.5 text-neutral-400" />
-                  <span>New notebook</span>
-                </button>
-              </div>
-
-              {/* Recents Chat Stream */}
-              <div className="flex-1 overflow-y-auto space-y-0.5 pr-1 scrollbar-none pt-1">
-                <div className="text-[10px] font-medium text-neutral-500 uppercase tracking-wider px-3 mb-1">
-                  Recents
-                </div>
-                {recentChats.map((chat, idx) => (
-                  <div
-                    key={idx}
-                    className={cn(
-                      "px-3 py-1.5 rounded-xl flex items-center justify-between text-[11px] cursor-pointer transition-colors group",
-                      chat.active
-                        ? "bg-[#282A2C] text-white font-medium"
-                        : "text-neutral-400 hover:text-neutral-200 hover:bg-[#282A2C]/60"
-                    )}
-                  >
-                    <span className="truncate pr-1">{chat.title}</span>
-                    {chat.pinned ? (
-                      <Pin className="size-3 text-neutral-400 shrink-0" />
-                    ) : chat.active ? (
-                      <MoreVertical className="size-3 text-neutral-400 shrink-0" />
-                    ) : null}
-                  </div>
-                ))}
-              </div>
+              <span className="hidden sm:inline font-mono text-[10px] text-neutral-500">|</span>
+              <span className="hidden sm:inline font-mono text-[10px] text-neutral-400">
+                {viewMode === "dashboard" ? "Live Production Dashboard" : "Prompt Command Console"}
+              </span>
             </div>
 
-            {/* Bottom Profile Pill */}
-            <div className="pt-2 border-t border-[#28292A] flex items-center justify-between px-2">
-              <div className="flex items-center gap-2">
-                <div className="size-6 rounded-full bg-gradient-to-br from-[#C8102E] to-[#FF7A1A] flex items-center justify-center text-[10px] font-bold text-white">
-                  R
-                </div>
-                <span className="text-neutral-300 text-xs font-medium truncate">Rishi</span>
-              </div>
-              <Settings className="size-3.5 text-neutral-400 hover:text-white cursor-pointer" />
+            {/* Switcher Pill */}
+            <div className="flex items-center gap-1 bg-[#141A24] p-0.5 rounded-full border border-neutral-700 text-[10px]">
+              <button
+                type="button"
+                onClick={() => {
+                  setViewMode("prompt");
+                  setIsLockedDashboard(false);
+                }}
+                className={cn(
+                  "px-3 py-1 rounded-full font-medium transition-all cursor-pointer",
+                  viewMode === "prompt"
+                    ? "bg-[#C8102E] text-white font-semibold shadow-xs"
+                    : "text-neutral-400 hover:text-white"
+                )}
+              >
+                Prompt Mode
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setViewMode("dashboard");
+                  setIsLockedDashboard(true);
+                }}
+                className={cn(
+                  "px-3 py-1 rounded-full font-medium transition-all cursor-pointer flex items-center gap-1",
+                  viewMode === "dashboard"
+                    ? "bg-white text-black font-semibold shadow-xs"
+                    : "text-neutral-400 hover:text-white"
+                )}
+              >
+                <span>Live Dashboard</span>
+                <span className="size-1.5 rounded-full bg-[#C8102E] animate-pulse" />
+              </button>
             </div>
           </div>
 
-          {/* ── Main Conversation Area (Gemini Style) ── */}
-          <div
-            className="flex-1 flex flex-col justify-between overflow-hidden bg-[#131314] relative"
-            onMouseLeave={handleEvidenceLeave}
-          >
-            {/* Top Workspace Bar */}
-            <div className="flex items-center justify-between px-4 sm:px-6 py-2.5 border-b border-[#28292A] bg-[#131314] shrink-0">
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 bg-[#1E1F20] p-1 rounded-xl border border-[#333537] text-xs font-mono">
-                  {(["chatgpt", "claude", "perplexity"] as const).map((engine) => (
-                    <button
-                      key={engine}
-                      type="button"
-                      onClick={() => setSelectedEngine(engine)}
-                      className={cn(
-                        "px-3 py-1 rounded-lg transition-all cursor-pointer",
-                        selectedEngine === engine
-                          ? "bg-white text-black font-semibold shadow-xs"
-                          : "text-neutral-400 hover:text-white"
-                      )}
-                    >
-                      {engine === "chatgpt" ? "GPT-4o Search" : engine === "claude" ? "Claude 3.7" : "Perplexity Pro"}
-                    </button>
-                  ))}
+          <AnimatePresence mode="wait">
+            {/* ════════════════════ VIEW 1: INITIAL PROMPT SCREEN ════════════════════ */}
+            {viewMode === "prompt" && (
+              <motion.div
+                key="prompt-view"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.2 }}
+                className="flex-1 flex flex-col justify-between p-6 sm:p-10 bg-radial from-[#101622] to-[#07090E] relative overflow-hidden"
+              >
+                {/* Background Grid Pattern */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f293d10_1px,transparent_1px),linear-gradient(to_bottom,#1f293d10_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
+
+                {/* Top Status Header */}
+                <div className="flex items-center justify-between text-xs text-neutral-400 relative z-10">
+                  <div className="flex items-center gap-2">
+                    <span className="size-2 rounded-full bg-[#C8102E] animate-ping" />
+                    <span className="font-mono text-[11px] uppercase tracking-wider text-neutral-300">
+                      Multi-LLM Real-Time Engine Listening
+                    </span>
+                  </div>
+                  <span className="font-mono text-[11px] text-neutral-500">
+                    Target: Enterprise GEO &amp; Citation Engine
+                  </span>
                 </div>
-              </div>
 
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsLibraryOpen(true)}
-                  className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1E1F20] hover:bg-[#282A2C] border border-[#333537] text-xs font-medium text-neutral-300 transition-colors cursor-pointer"
-                >
-                  <Sparkles className="size-3 text-[#FF7A1A]" />
-                  <span>Prompt Library</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={onOpenDemo}
-                  className="size-7 rounded-full bg-[#1E1F20] border border-[#333537] flex items-center justify-center text-neutral-400 hover:text-white cursor-pointer"
-                >
-                  <MoreVertical className="size-3.5" />
-                </button>
-              </div>
-            </div>
+                {/* Center Main Prompt Inquiry Box */}
+                <div className="max-w-2xl mx-auto w-full text-center space-y-6 relative z-10 my-auto">
+                  <div className="space-y-2">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-neutral-300">
+                      <Sparkles className="size-3.5 text-[#C8102E]" />
+                      <span>Natural Language Visibility Diagnostic</span>
+                    </div>
+                    <h3 className="text-2xl sm:text-3xl font-bold font-jakarta text-white tracking-tight">
+                      What do you want AI to say about you?
+                    </h3>
+                  </div>
 
-            <AnimatePresence mode="wait">
-              {/* ════ DEFAULT VIEW: RETAINED ORIGINAL CONTENT IN GEMINI WORKSPACE ════ */}
-              {!isEvidenceMode && (
-                <motion.div
-                  key="chat"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.18 }}
-                  className="flex-1 flex flex-col justify-between p-4 sm:p-6 overflow-hidden"
-                >
-                  {/* Chat Content Stream */}
-                  <div className="flex-1 overflow-y-auto space-y-6 pr-2 scrollbar-none text-left">
+                  {/* ── Interactive Typing Prompt Trigger Bar ── */}
+                  <div
+                    onMouseEnter={handlePromptHoverEnter}
+                    onMouseLeave={handlePromptHoverLeave}
+                    onClick={toggleDashboardLock}
+                    className="group relative rounded-3xl bg-[#0F141F] border-2 border-[#222B3D] hover:border-[#C8102E] p-4 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.6)] cursor-pointer transition-all duration-300 hover:scale-[1.02] active:scale-[0.99] text-left"
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="size-9 rounded-2xl bg-[#C8102E]/10 border border-[#C8102E]/30 flex items-center justify-center text-[#C8102E] shrink-0">
+                          <Bot className="size-5" />
+                        </div>
+                        <div className="flex-1 min-w-0 font-mono text-sm sm:text-base text-white">
+                          <span>{typedText}</span>
+                          <span className="inline-block w-2 h-4 bg-[#C8102E] ml-1 animate-pulse align-middle" />
+                        </div>
+                      </div>
 
-                    {/* User Prompt (Top Right rounded bubble) */}
-                    <div className="flex justify-end">
-                      <div className="max-w-xl rounded-3xl bg-[#282A2C] p-4 sm:p-5 text-xs sm:text-sm text-[#E3E3E3] leading-relaxed border border-[#3A3C3E] shadow-md">
-                        <p>{promptInput}</p>
+                      <button
+                        type="button"
+                        className="px-4 py-2.5 rounded-full bg-gradient-to-r from-[#C8102E] to-[#E02444] text-white text-xs font-bold font-sans flex items-center gap-2 shadow-lg shadow-red-950/40 group-hover:scale-105 transition-all shrink-0"
+                      >
+                        <span>Audit Now</span>
+                        <ArrowRight className="size-3.5" />
+                      </button>
+                    </div>
+
+                    {/* Hint Subtext */}
+                    <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-sans text-neutral-400">
+                      <span className="flex items-center gap-1.5 text-neutral-300">
+                        <Flame className="size-3.5 text-[#C8102E]" />
+                        <strong>Hover or click prompt</strong> to reveal your real-time AVS Dashboard
+                      </span>
+                      <span className="font-mono text-[#C8102E] font-semibold flex items-center gap-1">
+                        Open Dashboard →
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Suggestion Pills */}
+                  <div className="flex items-center justify-center flex-wrap gap-2 pt-2">
+                    {[
+                      "Show my company on top",
+                      "Why does Perplexity cite Competitor A?",
+                      "Audit Hinglish search visibility in Mumbai",
+                    ].map((sugg) => (
+                      <button
+                        key={sugg}
+                        type="button"
+                        onClick={toggleDashboardLock}
+                        className="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-neutral-300 hover:text-white text-xs font-sans transition-colors cursor-pointer"
+                      >
+                        {sugg}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Bottom Model Indicators */}
+                <div className="flex items-center justify-between text-[11px] font-mono text-neutral-500 pt-4 border-t border-white/5 relative z-10">
+                  <span>Connected Engines: ChatGPT 4o • Claude 3.7 • Perplexity Pro • Gemini 3.5</span>
+                  <span className="text-neutral-400">Hover trigger active</span>
+                </div>
+              </motion.div>
+            )}
+
+            {/* ════════════════════ VIEW 2: ACTUAL REDESIGNED AIVI DASHBOARD ════════════════════ */}
+            {viewMode === "dashboard" && (
+              <motion.div
+                key="dashboard-view"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.25 }}
+                className="flex-1 flex overflow-hidden bg-[#07090E]"
+              >
+                {/* ── 1. Left Navigation Sidebar ── */}
+                <div className="hidden md:flex w-[230px] lg:w-[250px] flex-col justify-between bg-[#0B0F17] border-r border-[#1B2232] p-3 text-xs shrink-0 select-none overflow-y-auto scrollbar-none">
+                  <div className="space-y-4">
+                    
+                    {/* Brand in Sidebar */}
+                    <div className="flex items-center gap-2.5 px-2 py-1">
+                      <div className="size-7 rounded-xl bg-gradient-to-br from-[#C8102E] to-[#FF7A1A] flex items-center justify-center text-white font-bold text-xs shadow-md shadow-red-950/30">
+                        <Activity className="size-4" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-white text-xs tracking-tight">AI Visibility Insights</div>
+                        <div className="text-[9px] font-mono text-neutral-400 uppercase tracking-wider">GEO PLATFORM</div>
                       </div>
                     </div>
 
-                    {/* Model Response Stream (Live Citation Footprint with BVI Score) */}
-                    <div className="space-y-4 max-w-3xl">
-                      <div className="p-4 sm:p-5 rounded-2xl bg-[#1E1F20] border border-[#2D2E30] space-y-3.5 shadow-lg">
-                        <div className="flex items-center justify-between flex-wrap gap-2 pb-2.5 border-b border-[#2D2E30]">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-mono uppercase text-[#C8102E] font-bold tracking-wider">
-                              Live Citation Footprint
-                            </span>
-                            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#C8102E]/10 text-rose-300 border border-[#C8102E]/20">
-                              Rank #1 Recommended
-                            </span>
-                          </div>
-                          <span className="text-[11px] font-mono text-neutral-400">
-                            BVI Authority Score:{" "}
-                            <strong className="text-white">94.8%</strong>
-                          </span>
+                    {/* Navigation Groups */}
+                    <div className="space-y-3">
+                      {/* Overview */}
+                      <div>
+                        <div className="text-[9px] font-mono font-bold uppercase tracking-wider text-neutral-500 px-2 mb-1">
+                          Overview
                         </div>
-
-                        <p className="text-xs sm:text-sm text-neutral-200 font-sans leading-relaxed">
-                          Across 124 evaluated B2B query prompts, your primary domain was cited
-                          in <strong>88%</strong> of ChatGPT and Perplexity recommendations.
-                          Competitor displacement remains low (12%) and concentrated in
-                          third-party review listicles.
-                        </p>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+                        <div className="space-y-0.5">
                           {[
-                            { label: "Primary Domain", name: "yourbrand.com/platform", weight: "48% weight" },
-                            { label: "Editorial Benchmark", name: "TechCrunch Enterprise", weight: "32% weight" },
-                            { label: "Community Citations", name: "Reddit r/SaaS Grid", weight: "20% weight" },
-                          ].map(({ label, name, weight }) => (
-                            <div key={label} className="p-3 rounded-xl bg-[#131314] border border-[#2D2E30] text-xs space-y-1">
-                              <div className="text-neutral-400 text-[10px] font-mono uppercase">{label}</div>
-                              <div className="font-semibold text-white truncate text-xs">{name}</div>
-                              <div className="text-[#C8102E] font-mono text-[11px] font-bold">{weight}</div>
-                            </div>
+                            { name: "Dashboard Overview", icon: LayoutDashboardIcon },
+                            { name: "Quick Wins", icon: Zap },
+                          ].map(({ name, icon: Icon }) => (
+                            <button
+                              key={name}
+                              type="button"
+                              onClick={() => setActiveSidebarItem(name)}
+                              className={cn(
+                                "w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-colors cursor-pointer text-left",
+                                activeSidebarItem === name
+                                  ? "bg-[#C8102E]/20 text-white border border-[#C8102E]/40 font-semibold"
+                                  : "text-neutral-400 hover:text-neutral-200 hover:bg-white/5"
+                              )}
+                            >
+                              <Icon className={cn("size-3.5", activeSidebarItem === name ? "text-[#C8102E]" : "text-neutral-400")} />
+                              <span>{name}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Audits */}
+                      <div>
+                        <div className="text-[9px] font-mono font-bold uppercase tracking-wider text-neutral-500 px-2 mb-1">
+                          Audits
+                        </div>
+                        <div className="space-y-0.5">
+                          {[
+                            "Technical SEO",
+                            "Crawler Issues",
+                            "Performance & Speed",
+                            "Search Readiness",
+                            "Crawl Pages",
+                            "Crawler Analytics",
+                          ].map((audit) => (
+                            <button
+                              key={audit}
+                              type="button"
+                              onClick={() => setActiveSidebarItem(audit)}
+                              className={cn(
+                                "w-full flex items-center justify-between px-2.5 py-1 rounded-lg text-[11px] transition-colors cursor-pointer text-left",
+                                activeSidebarItem === audit
+                                  ? "bg-[#C8102E]/20 text-white font-semibold"
+                                  : "text-neutral-400 hover:text-neutral-200 hover:bg-white/5"
+                              )}
+                            >
+                              <span>{audit}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* AI Visibility */}
+                      <div>
+                        <div className="text-[9px] font-mono font-bold uppercase tracking-wider text-neutral-500 px-2 mb-1">
+                          AI Visibility
+                        </div>
+                        <div className="space-y-0.5">
+                          {[
+                            { name: "AI Citation Probability", pro: false },
+                            { name: "Real LLM Citations", pro: true },
+                            { name: "AI Response Simulator", pro: false },
+                            { name: "AI Traffic Risk Audit", pro: true },
+                            { name: "AI Citation Gaps", pro: true },
+                            { name: "Bharat Visibility Index™", pro: true },
+                            { name: "AI Entity Strength", pro: false },
+                            { name: "Multi-Model Perception", pro: false },
+                            { name: "Visibility Monitoring", pro: false },
+                            { name: "Prompt Library", pro: false },
+                          ].map((item) => (
+                            <button
+                              key={item.name}
+                              type="button"
+                              onClick={() => setActiveSidebarItem(item.name)}
+                              className={cn(
+                                "w-full flex items-center justify-between px-2.5 py-1 rounded-lg text-[11px] transition-colors cursor-pointer text-left",
+                                activeSidebarItem === item.name
+                                  ? "bg-[#C8102E]/20 text-white font-semibold"
+                                  : "text-neutral-400 hover:text-neutral-200 hover:bg-white/5"
+                              )}
+                            >
+                              <span className="truncate">{item.name}</span>
+                              {item.pro && (
+                                <span className="text-[8px] font-mono bg-[#C8102E]/20 text-rose-300 px-1 py-0.2 rounded border border-[#C8102E]/30 shrink-0">
+                                  PRO
+                                </span>
+                              )}
+                            </button>
                           ))}
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* ── Bottom Floating Gemini Input Console ── */}
-                  <div
-                    className="pt-3 shrink-0 cursor-pointer"
-                    onMouseEnter={handleEvidenceEnter}
-                    onClick={() => setIsEvidenceMode(true)}
-                  >
-                    <div className="relative rounded-3xl bg-[#1E1F20] border border-[#333537] hover:border-neutral-500 shadow-xl px-4 py-3 sm:py-3.5 flex items-center justify-between gap-3 transition-all group">
-                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                  {/* Sidebar Bottom Profile */}
+                  <div className="pt-3 border-t border-[#1B2232] flex items-center justify-between px-1">
+                    <div className="flex items-center gap-2">
+                      <div className="size-6 rounded-full bg-gradient-to-tr from-[#C8102E] to-[#FF7A1A] flex items-center justify-center text-[10px] font-bold text-white">
+                        R
+                      </div>
+                      <div className="leading-none truncate">
+                        <div className="text-white text-[11px] font-semibold truncate">Rishikesh Raj</div>
+                        <div className="text-neutral-500 text-[9px] font-mono">STARTER PLAN</div>
+                      </div>
+                    </div>
+                    <Settings className="size-3.5 text-neutral-400 hover:text-white cursor-pointer" />
+                  </div>
+                </div>
+
+                {/* ── 2. Main Scrollable Dashboard Content (Two Full Pages of Real App Data) ── */}
+                <div className="flex-1 flex flex-col overflow-hidden bg-[#07090E]">
+                  
+                  {/* Dashboard Top Header Bar */}
+                  <div className="h-12 bg-[#0A0E17] border-b border-[#1A2233] px-4 sm:px-6 flex items-center justify-between text-xs shrink-0">
+                    <div className="flex items-center gap-2 text-neutral-400 font-mono text-[11px]">
+                      <span className="text-neutral-200 font-semibold">Dashboard</span>
+                      <span>/</span>
+                      <span className="text-[#C8102E]">Overview</span>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      {/* AVS Live Score Pill */}
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#121824] border border-[#222E44] text-[11px] font-mono text-neutral-300">
+                        <span className="size-1.5 rounded-full bg-[#C8102E]" />
+                        <span>avs-1 • <strong className="text-white">78 AVS</strong></span>
+                      </div>
+
+                      {/* Run Analysis Job Action */}
+                      <button
+                        type="button"
+                        onClick={() => onOpenDemo?.()}
+                        className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#C8102E] to-[#E02444] hover:from-[#B00D27] hover:to-[#C8102E] text-white text-[11px] font-bold flex items-center gap-1.5 shadow-md shadow-red-950/30 transition-all cursor-pointer"
+                      >
+                        <Play className="size-3 fill-current" />
+                        <span>RUN ANALYSIS JOB</span>
+                      </button>
+
+                      <button type="button" className="size-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-colors cursor-pointer">
+                        <Bell className="size-3.5" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* ── Scrollable Body Area ── */}
+                  <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 scrollbar-thin scrollbar-thumb-neutral-700 scrollbar-track-transparent text-left">
+                    
+                    {/* Greeting & Header */}
+                    <div className="flex items-center justify-between flex-wrap gap-3">
+                      <div>
+                        <h2 className="text-xl sm:text-2xl font-bold font-jakarta text-white tracking-tight flex items-center gap-2">
+                          <span>Good morning, Rishikesh</span>
+                          <span>👋</span>
+                        </h2>
+                        <p className="text-xs text-neutral-400 font-sans">
+                          Here&rsquo;s your AI intelligence overview and canonical visibility score.
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => onOpenDemo?.()}
+                        className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer"
+                      >
+                        <Plus className="size-3.5 text-[#C8102E]" />
+                        <span>+ Add Domain</span>
+                      </button>
+                    </div>
+
+                    {/* ════ HERO CARD: AIVI VISIBILITY SCORE (AVS 78) ════ */}
+                    <div className="rounded-2xl bg-[#0D121D] border border-[#1E273A] p-5 sm:p-6 shadow-xl relative overflow-hidden space-y-4">
+                      <div className="absolute top-0 right-0 w-80 h-80 bg-[#C8102E]/5 rounded-full blur-3xl pointer-events-none" />
+
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="space-y-1.5 max-w-xl">
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#141B2A] text-neutral-300 border border-[#25324E]">
+                              Scheme avs-1
+                            </span>
+                            <span className="text-[10px] font-mono text-emerald-400 font-semibold flex items-center gap-1">
+                              <span className="size-1.5 rounded-full bg-emerald-400" />
+                              85% CONFIDENCE (75% MEASURED)
+                            </span>
+                          </div>
+                          <h3 className="text-lg sm:text-xl font-bold font-jakarta text-white tracking-tight flex items-center gap-2">
+                            <Sparkles className="size-4 text-[#C8102E]" />
+                            <span>AIVI Visibility Score (AVS)</span>
+                          </h3>
+                          <p className="text-xs text-neutral-400 leading-relaxed font-sans">
+                            Canonical 0-100 weighted index evaluating real citation rate, technical SEO, bot crawlability, and LLM search readiness across sovereign search engines.
+                          </p>
+                        </div>
+
+                        {/* Circular Score Ring Gauge */}
+                        <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#080B11] border border-[#1A2335] shrink-0">
+                          <div className="relative size-20 sm:size-24 flex items-center justify-center">
+                            <svg className="size-full -rotate-90" viewBox="0 0 36 36">
+                              <path
+                                className="text-neutral-800"
+                                strokeWidth="3.2"
+                                stroke="currentColor"
+                                fill="none"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                              />
+                              <path
+                                className="text-[#C8102E]"
+                                strokeDasharray="78, 100"
+                                strokeWidth="3.2"
+                                strokeLinecap="round"
+                                stroke="currentColor"
+                                fill="none"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                              />
+                            </svg>
+                            <div className="absolute flex flex-col items-center justify-center">
+                              <span className="text-2xl sm:text-3xl font-extrabold font-jakarta text-white">78</span>
+                              <span className="text-[9px] font-mono text-neutral-400 -mt-0.5">AVS Index</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Card Footer Actions */}
+                      <div className="pt-3 border-t border-[#1C2538] flex items-center justify-between flex-wrap gap-2 text-xs">
                         <button
                           type="button"
-                          className="size-7 rounded-full bg-[#282A2C] hover:bg-[#333537] flex items-center justify-center text-neutral-300 shrink-0 transition-colors"
+                          onClick={() => setExpandedAVS(!expandedAVS)}
+                          className="font-mono text-[11px] text-neutral-300 hover:text-white flex items-center gap-1 transition-colors cursor-pointer"
                         >
-                          <Plus className="size-4" />
+                          <span>{expandedAVS ? "Collapse" : "Expand"} AVS Component Breakdown</span>
+                          {expandedAVS ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
                         </button>
-                        <span className="text-xs sm:text-sm text-neutral-400 font-sans truncate">
-                          {promptInput}
-                        </span>
-                      </div>
 
-                      <div className="flex items-center gap-2 shrink-0">
-                        <div className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#131314] text-[11px] font-medium text-neutral-300 border border-neutral-700">
-                          <span>Flash</span>
-                          <ChevronDown className="size-3 text-neutral-500" />
-                        </div>
-                        <button type="button" className="size-8 rounded-full hover:bg-[#282A2C] flex items-center justify-center text-neutral-400 hover:text-white transition-colors">
-                          <Mic className="size-4" />
-                        </button>
                         <button
                           type="button"
-                          className="size-8 rounded-full bg-gradient-to-r from-[#C8102E] to-[#E02444] hover:from-[#B00D27] hover:to-[#C8102E] text-white flex items-center justify-center shadow-md shadow-red-950/20 transition-all hover:scale-105"
+                          onClick={() => onOpenDemo?.()}
+                          className="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white font-mono text-[11px] border border-white/10 transition-colors cursor-pointer"
                         >
-                          <ArrowRight className="size-4" />
+                          Run Crash-Resumable Job
                         </button>
                       </div>
-                    </div>
-                    <div className="text-[10px] text-neutral-500 text-center pt-2 font-sans">
-                      AIVI is enterprise generative search intelligence and can make mistakes.
-                    </div>
-                  </div>
-                </motion.div>
-              )}
 
-              {/* ════ LIVE MULTI-ENGINE EVIDENCE SUITE VIEW (When Interacted) ════ */}
-              {isEvidenceMode && (
-                <motion.div
-                  key="evidence"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.22 }}
-                  className="flex-1 flex flex-col h-full p-4 sm:p-5 space-y-3 overflow-y-auto scrollbar-none text-left"
-                >
-                  {/* Header */}
-                  <div className="flex items-center justify-between gap-2 pb-3 border-b border-[#28292A] shrink-0">
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2">
-                        <span className="size-1.5 rounded-full bg-[#C8102E] animate-pulse" />
-                        <span className="font-mono text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">
-                          Live Multi-Engine Evidence Suite
-                        </span>
-                      </div>
-                      <h4 className="font-sans text-sm sm:text-base font-bold text-white tracking-tight">
-                        Authentic LLM Citation &amp; Displacement Inspector
-                      </h4>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => setIsLibraryOpen(true)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1E1F20] hover:bg-[#282A2C] border border-[#333537] text-xs font-semibold text-neutral-200 hover:text-white transition-all shrink-0 cursor-pointer"
-                    >
-                      <Sparkles className="size-3 text-[#FF7A1A]" />
-                      <span>Prompt Library</span>
-                    </button>
-                  </div>
-
-                  {/* Interactive Prompt Input */}
-                  <div className="space-y-1 shrink-0">
-                    <div className="text-[10px] font-mono text-neutral-400 font-medium flex items-center justify-between px-1">
-                      <span>Interactive Audit Command Console</span>
-                      <span className="text-neutral-500">Press Enter to execute</span>
-                    </div>
-                    <PromptInput
-                      value={currentPromptText}
-                      onChange={setCurrentPromptText}
-                      onSubmit={handlePromptSubmit}
-                      selectedModel={selectedModel}
-                      onSelectModel={setSelectedModel}
-                      onOpenPromptLibrary={() => setIsLibraryOpen(true)}
-                    />
-                  </div>
-
-                  {/* Engine Inspection Card */}
-                  <div className="p-4 sm:p-5 rounded-2xl bg-[#1E1F20] border border-[#2D2E30] space-y-3 text-left">
-                    <div className="flex items-center justify-between flex-wrap gap-2 pb-2.5 border-b border-[#2D2E30]">
-                      <div className="flex items-center gap-2">
-                        <span className={cn("text-xs font-mono font-bold tracking-wider", activeResult.iconColor)}>
-                          {activeResult.engineName}
-                        </span>
-                        <span className={cn("px-2 py-0.5 rounded text-[10px] font-mono border", activeResult.statusColor)}>
-                          {activeResult.brandStatus}
-                        </span>
-                      </div>
-                      <span className="text-[11px] font-mono text-neutral-400">
-                        {activeResult.timestamp}
-                      </span>
-                    </div>
-
-                    <p className="text-xs sm:text-sm text-neutral-200 font-sans leading-relaxed">
-                      {activeResult.aiResponse}
-                    </p>
-
-                    {/* Sources Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
-                      {activeResult.citedSources.map((src, i) => (
-                        <div key={i} className="p-2.5 rounded-xl bg-[#131314] border border-[#2D2E30] text-xs space-y-1">
-                          <div className="text-neutral-400 text-[10px] font-mono uppercase">{src.type}</div>
-                          <div className="font-semibold text-white truncate text-xs">{src.name}</div>
-                          <div className="text-[#C8102E] font-mono text-[11px] font-bold">{src.weight}</div>
+                      {/* Expanded Breakdown */}
+                      {expandedAVS && (
+                        <div className="pt-3 border-t border-[#1C2538] grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs font-sans">
+                          <div className="p-2.5 rounded-xl bg-[#080B11] border border-white/5 space-y-1">
+                            <div className="text-neutral-400 text-[10px] font-mono uppercase">Direct Citation Grounding</div>
+                            <div className="text-sm font-bold text-white">88.4%</div>
+                            <div className="text-[10px] text-emerald-400">+14% vs. industry benchmark</div>
+                          </div>
+                          <div className="p-2.5 rounded-xl bg-[#080B11] border border-white/5 space-y-1">
+                            <div className="text-neutral-400 text-[10px] font-mono uppercase">Bharat Visibility Index™</div>
+                            <div className="text-sm font-bold text-white">94.8%</div>
+                            <div className="text-[10px] text-emerald-400">Dominant Indic model attribution</div>
+                          </div>
+                          <div className="p-2.5 rounded-xl bg-[#080B11] border border-white/5 space-y-1">
+                            <div className="text-neutral-400 text-[10px] font-mono uppercase">DAST Security &amp; LLMs.txt</div>
+                            <div className="text-sm font-bold text-white">92.0%</div>
+                            <div className="text-[10px] text-[#C8102E]">1 High severity header remediation</div>
+                          </div>
                         </div>
-                      ))}
+                      )}
                     </div>
+
+                    {/* ════ SUB-SCORE MODULES (3 CARDS) ════ */}
+                    <div className="space-y-2">
+                      <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+                        Sub-Score Modules (Part of your AIVI Visibility Score)
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        {[
+                          {
+                            title: "AI Citation Score",
+                            score: "84",
+                            badge: "SIMULATED ESTIMATE",
+                            desc: "PART OF YOUR AIVI VISIBILITY SCORE",
+                            color: "text-[#C8102E]",
+                          },
+                          {
+                            title: "Search Readiness",
+                            score: "92",
+                            badge: "SIMULATED ESTIMATE",
+                            desc: "PART OF YOUR AIVI VISIBILITY SCORE",
+                            color: "text-blue-400",
+                          },
+                          {
+                            title: "Technical SEO",
+                            score: "76",
+                            badge: "SIMULATED ESTIMATE",
+                            desc: "PART OF YOUR AIVI VISIBILITY SCORE",
+                            color: "text-emerald-400",
+                          },
+                        ].map((module) => (
+                          <div
+                            key={module.title}
+                            className="p-4 rounded-xl bg-[#0B0F17] border border-[#1C2538] hover:border-neutral-600 transition-all flex items-center justify-between cursor-pointer group"
+                          >
+                            <div className="flex items-center gap-3.5">
+                              <div className="size-11 rounded-xl bg-[#07090E] border border-[#1F293D] flex items-center justify-center font-jakarta font-extrabold text-base text-white">
+                                {module.score}
+                              </div>
+                              <div className="space-y-0.5">
+                                <h4 className="text-xs font-bold text-white group-hover:text-[#C8102E] transition-colors">
+                                  {module.title}
+                                </h4>
+                                <div className="text-[9px] font-mono text-neutral-500 uppercase">{module.desc}</div>
+                                <div className="text-[8px] font-mono bg-[#141B29] text-amber-300 px-1 py-0.2 rounded inline-block border border-amber-500/20">
+                                  ⚠️ {module.badge}
+                                </div>
+                              </div>
+                            </div>
+                            <ChevronRight className="size-4 text-neutral-600 group-hover:text-white transition-colors" />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* ════ MIDDLE ROW: DOMAINS + MONTHLY USAGE ════ */}
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+                      
+                      {/* Your Domains */}
+                      <div className="lg:col-span-8 rounded-2xl bg-[#0B0F17] border border-[#1C2538] p-4 sm:p-5 space-y-3.5 flex flex-col justify-between">
+                        <div className="flex items-center justify-between pb-2 border-b border-white/5">
+                          <div className="flex items-center gap-2">
+                            <Globe className="size-4 text-[#C8102E]" />
+                            <h4 className="text-xs font-bold text-white font-jakarta">Your Domains</h4>
+                          </div>
+                          <button type="button" className="font-mono text-[11px] text-neutral-400 hover:text-white transition-colors cursor-pointer">
+                            Manage →
+                          </button>
+                        </div>
+
+                        {/* Domain Active Item */}
+                        <div className="p-3.5 rounded-xl bg-[#07090E] border border-[#1C2538] flex items-center justify-between flex-wrap gap-2">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-sm text-white font-mono">yourbrand.com</span>
+                              <span className="px-2 py-0.2 rounded text-[9px] font-mono bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
+                                Live Monitored
+                              </span>
+                            </div>
+                            <div className="text-[11px] text-neutral-400 font-sans">
+                              124 evaluated search queries • BVI Indic Score: 94.8% • DAST Clean
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => onOpenDemo?.()}
+                              className="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-mono text-neutral-200 border border-white/10 transition-colors"
+                            >
+                              Scan Details
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Add Domain Trigger */}
+                        <button
+                          type="button"
+                          onClick={() => onOpenDemo?.()}
+                          className="w-full py-2.5 rounded-xl border border-dashed border-[#222D42] hover:border-[#C8102E] text-neutral-400 hover:text-white text-xs font-mono flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                        >
+                          <Plus className="size-3.5 text-[#C8102E]" />
+                          <span>Add your next domain to start analyzing</span>
+                        </button>
+                      </div>
+
+                      {/* Monthly Usage */}
+                      <div className="lg:col-span-4 rounded-2xl bg-[#0B0F17] border border-[#1C2538] p-4 sm:p-5 space-y-3 flex flex-col justify-between">
+                        <div className="flex items-center justify-between pb-2 border-b border-white/5">
+                          <div className="flex items-center gap-2">
+                            <TrendingUp className="size-4 text-blue-400" />
+                            <h4 className="text-xs font-bold text-white font-jakarta">Monthly Usage</h4>
+                          </div>
+                          <span className="px-2 py-0.5 rounded text-[9px] font-mono bg-white/10 text-white">
+                            Starter
+                          </span>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-xs font-mono">
+                            <span className="text-neutral-400">AI Engine Calls</span>
+                            <span className="font-bold text-white">38 / 50</span>
+                          </div>
+                          <div className="h-2 w-full bg-[#07090E] rounded-full overflow-hidden border border-white/5">
+                            <div className="h-full bg-gradient-to-r from-[#C8102E] to-[#FF7A1A] w-[76%]" />
+                          </div>
+                          <div className="text-[10px] text-neutral-500 font-mono">
+                            12 calls remaining this billing cycle
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => onOpenDemo?.()}
+                          className="w-full py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white font-sans font-semibold text-xs transition-colors cursor-pointer"
+                        >
+                          Upgrade Plan
+                        </button>
+                      </div>
+
+                    </div>
+
+                    {/* ════ LOWER ROW 1: UNIFIED ACTIONABLE ISSUES (FROM IMAGE 2) ════ */}
+                    <div className="rounded-2xl bg-[#0B0F17] border border-[#1C2538] p-4 sm:p-5 space-y-3">
+                      <div className="flex items-center justify-between pb-2 border-b border-white/5">
+                        <div className="flex items-center gap-2">
+                          <AlertTriangle className="size-4 text-amber-400" />
+                          <h4 className="text-xs font-bold text-white font-jakarta">Unified Actionable Issues</h4>
+                        </div>
+                        <span className="text-[10px] font-mono text-neutral-400">
+                          3 priority recommendations
+                        </span>
+                      </div>
+
+                      <div className="space-y-2">
+                        {[
+                          {
+                            title: "Deploy standard llms.txt at domain root",
+                            impact: "HIGH IMPACT",
+                            impactColor: "bg-[#C8102E]/20 text-rose-300 border-[#C8102E]/30",
+                            desc: "Enables autonomous token indexing for ChatGPT Search and Claude 3.7 without crawler blocks.",
+                          },
+                          {
+                            title: "Fix Missing Content-Security-Policy (CSP) headers",
+                            impact: "DAST SECURITY",
+                            impactColor: "bg-amber-500/20 text-amber-300 border-amber-500/30",
+                            desc: "DAST scanner identified unanchored CSP directives. Synthesize 1-click Cursor prompt.",
+                          },
+                          {
+                            title: "Optimize Hinglish grounding entities for Bharat Visibility Index™",
+                            impact: "INDIC GEO",
+                            impactColor: "bg-blue-500/20 text-blue-300 border-blue-500/30",
+                            desc: "Captures 35% uncontested vernacular queries across Tier-1 and Tier-2 Indian metro consumers.",
+                          },
+                        ].map((issue, idx) => (
+                          <div
+                            key={idx}
+                            className="p-3 rounded-xl bg-[#07090E] border border-[#1A2233] flex items-start justify-between gap-3 text-xs"
+                          >
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <span className="font-bold text-white font-sans text-xs">{issue.title}</span>
+                                <span className={cn("px-1.5 py-0.2 rounded text-[8px] font-mono border", issue.impactColor)}>
+                                  {issue.impact}
+                                </span>
+                              </div>
+                              <p className="text-[11px] text-neutral-400 font-sans leading-relaxed">
+                                {issue.desc}
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => onOpenDemo?.()}
+                              className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white font-mono text-[10px] shrink-0 border border-white/10 transition-colors"
+                            >
+                              Fix Prompt →
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* ════ LOWER ROW 2: QUICK ACCESS & RECENT ACTIVITY (FROM IMAGE 2) ════ */}
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                      
+                      {/* Quick Access */}
+                      <div className="lg:col-span-5 rounded-2xl bg-[#0B0F17] border border-[#1C2538] p-4 sm:p-5 space-y-2.5">
+                        <div className="text-xs font-bold text-white font-jakarta pb-1 border-b border-white/5">
+                          Quick Access
+                        </div>
+                        <div className="space-y-1.5">
+                          {[
+                            { name: "Technical SEO", icon: Search },
+                            { name: "AI Citation Probability", icon: Bot },
+                            { name: "Growth Roadmap & llms.txt", icon: TrendingUp },
+                            { name: "Search Readiness Score", icon: ShieldCheck },
+                          ].map(({ name, icon: Icon }) => (
+                            <button
+                              key={name}
+                              type="button"
+                              onClick={() => onOpenDemo?.()}
+                              className="w-full flex items-center justify-between p-2.5 rounded-xl bg-[#07090E] border border-[#1A2233] hover:border-neutral-600 text-neutral-300 hover:text-white text-xs font-sans transition-all cursor-pointer"
+                            >
+                              <div className="flex items-center gap-2">
+                                <Icon className="size-3.5 text-[#C8102E]" />
+                                <span>{name}</span>
+                              </div>
+                              <ArrowRight className="size-3 text-neutral-500" />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Recent Activity Timeline */}
+                      <div className="lg:col-span-7 rounded-2xl bg-[#0B0F17] border border-[#1C2538] p-4 sm:p-5 space-y-2.5 flex flex-col justify-between">
+                        <div className="flex items-center justify-between pb-1 border-b border-white/5 text-xs">
+                          <span className="font-bold text-white font-jakarta">Recent Activity</span>
+                          <span className="font-mono text-[10px] text-neutral-400">Live stream</span>
+                        </div>
+
+                        <div className="space-y-2 text-xs font-sans">
+                          {[
+                            {
+                              time: "2 mins ago",
+                              title: "ChatGPT Search (GPT-4o) citation audit completed",
+                              status: "Rank #1 Recommended",
+                              color: "text-emerald-400",
+                            },
+                            {
+                              time: "15 mins ago",
+                              title: "Perplexity Pro Indic grounding indexed for Mumbai, IN",
+                              status: "62% Direct Attribution",
+                              color: "text-blue-400",
+                            },
+                            {
+                              time: "1 hour ago",
+                              title: "Bharat Visibility Index recalculated across Hindi & Hinglish",
+                              status: "94.8% BVI Score",
+                              color: "text-[#C8102E]",
+                            },
+                          ].map((act, i) => (
+                            <div key={i} className="p-2.5 rounded-xl bg-[#07090E] border border-[#1A2233] flex items-center justify-between gap-2">
+                              <div className="space-y-0.5 min-w-0">
+                                <div className="text-white font-medium truncate text-xs">{act.title}</div>
+                                <div className="text-[10px] text-neutral-500 font-mono">{act.time}</div>
+                              </div>
+                              <span className={cn("text-[10px] font-mono font-bold shrink-0", act.color)}>
+                                {act.status}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-neutral-500">
+                          <span>Real-time DAST &amp; GEO engine active</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setViewMode("prompt");
+                              setIsLockedDashboard(false);
+                            }}
+                            className="text-[#C8102E] hover:underline cursor-pointer"
+                          >
+                            ← Back to Prompt Console
+                          </button>
+                        </div>
+                      </div>
+
+                    </div>
+
                   </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+                </div>
+
+              </motion.div>
+            )}
+          </AnimatePresence>
 
         </div>
       </ContainerScroll>
     </section>
+  );
+}
+
+function LayoutDashboardIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect width="7" height="9" x="3" y="3" rx="1" />
+      <rect width="7" height="5" x="14" y="3" rx="1" />
+      <rect width="7" height="9" x="14" y="12" rx="1" />
+      <rect width="7" height="5" x="3" y="16" rx="1" />
+    </svg>
   );
 }
 
