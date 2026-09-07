@@ -214,7 +214,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/#blog" className="hover:text-white transition-colors py-1 inline-block">
+                <Link href="/blog" className="hover:text-white transition-colors py-1 inline-block">
                   Blog
                 </Link>
               </li>

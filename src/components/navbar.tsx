@@ -54,7 +54,7 @@ export function Navbar({ onOpenDemo }: NavbarProps) {
     { label: "Features", icon: Layers, href: "/features" },
     { label: "How It Works", icon: LayoutGrid, href: "/how-it-works" },
     { label: "Pricing", icon: Tag, href: "/#pricing" },
-    { label: "Blog", icon: FileText, href: "/resources" },
+    { label: "Blog", icon: FileText, href: "/blog" },
   ];
 
   const isItemActive = (href: string) => {
