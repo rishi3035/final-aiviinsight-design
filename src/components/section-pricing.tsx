@@ -113,7 +113,7 @@ export function PricingSection({ onOpenDemo }: PricingSectionProps) {
   const [showComparisonModal, setShowComparisonModal] = useState(false);
 
   return (
-    <section id="pricing" className="relative w-full bg-[#FAF9F6] py-24 sm:py-32 lg:py-36 px-4 sm:px-8 lg:px-12 overflow-hidden text-neutral-900">
+    <section id="pricing" className="relative min-h-screen w-full bg-[#FAF9F6] py-16 sm:py-20 lg:py-24 px-4 sm:px-8 lg:px-12 overflow-hidden text-neutral-900 flex flex-col justify-center items-center">
       
       {/* Background Subtle Grid Texture */}
       <div

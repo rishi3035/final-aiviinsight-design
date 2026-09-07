@@ -99,7 +99,7 @@ export function AIAnswerRoomSection({ onOpenDemo }: AIAnswerRoomProps) {
   return (
     <section
       id="answer-room"
-      className="relative w-full bg-[#05080A] text-white py-20 sm:py-24 px-4 sm:px-8 lg:px-12 overflow-hidden border-t border-white/10 scroll-mt-16"
+      className="relative min-h-screen w-full bg-[#05080A] text-white py-16 sm:py-20 lg:py-24 px-4 sm:px-8 lg:px-12 overflow-hidden border-t border-white/10 scroll-mt-16 flex flex-col justify-center items-center"
     >
       {/* Background Subtle Ambient Glow */}
       {/* Background removed */}

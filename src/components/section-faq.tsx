@@ -44,9 +44,9 @@ export function FAQSection({ onOpenDemo }: FAQSectionProps) {
   return (
     <section
       id="faq"
-      className="relative w-full bg-white text-neutral-900 overflow-hidden border-t border-neutral-200 scroll-mt-16"
+      className="relative min-h-screen w-full bg-white text-neutral-900 overflow-hidden border-t border-neutral-200 scroll-mt-16 flex flex-col justify-center items-center py-16 lg:py-24"
     >
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
+      <div className="max-w-[1440px] w-full mx-auto px-4 sm:px-8 lg:px-12 relative z-10 my-auto">
         <ScrollFAQAccordion data={FAQ_DATA} />
       </div>
     </section>
