@@ -1,354 +1,235 @@
 "use client";
 
 import React, { useState } from "react";
-import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Globe,
   ArrowRight,
-  ChevronRight,
-  Layers,
-  Search,
   Bot,
-  MapPin,
+  Sparkles,
+  CheckCircle2,
+  AlertTriangle,
+  TrendingUp,
+  Languages,
+  RotateCw,
+  ShieldCheck,
+  Zap,
   Activity,
-  Check,
-  Minus,
-  X,
+  ChevronRight,
+  Building2,
+  Award,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Dynamic import for MapLibre components to prevent SSR issues
-const Map = dynamic(
-  () => import("@/components/ui/mapcn-marker-tooltip").then((mod) => mod.Map),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-[480px] w-full bg-[#0B0B0B] rounded-2xl flex items-center justify-center text-neutral-400 font-mono text-xs border border-white/10">
-        Loading Bharat Geospatial AI Radar...
-      </div>
-    ),
-  }
-);
-const MapMarker = dynamic(
-  () => import("@/components/ui/mapcn-marker-tooltip").then((mod) => mod.MapMarker),
-  { ssr: false }
-);
-const MarkerContent = dynamic(
-  () => import("@/components/ui/mapcn-marker-tooltip").then((mod) => mod.MarkerContent),
-  { ssr: false }
-);
-const MarkerTooltip = dynamic(
-  () => import("@/components/ui/mapcn-marker-tooltip").then((mod) => mod.MarkerTooltip),
-  { ssr: false }
-);
-
-/* ─────────────────────────── Regional India Search Hubs ─────────────────────────── */
-
-interface CitySearchHub {
-  id: string;
-  name: string;
-  state: string;
-  lng: number;
-  lat: number;
-  searchesPerMo: string;
-  dominantLang: string;
-  langBreakdown: string;
-  bviScore: number;
-  status: "Strong Attribution" | "Partial Attribution" | "Visibility Gap";
-  sampleQuery: string;
-  aiAttribution: string;
-}
-
-const INDIA_SEARCH_HUBS: CitySearchHub[] = [
-  {
-    id: "blr",
-    name: "Bengaluru",
-    state: "Karnataka",
-    lng: 77.5946,
-    lat: 12.9716,
-    searchesPerMo: "3.8M",
-    dominantLang: "English",
-    langBreakdown: "64% English • 24% Hinglish • 12% Kannada",
-    bviScore: 88,
-    status: "Strong Attribution",
-    sampleQuery: "Best enterprise GEO analytics platforms in 2026",
-    aiAttribution: "YourBrand cited in #1 rank in 88% of tech queries",
-  },
-  {
-    id: "mum",
-    name: "Mumbai & MMR",
-    state: "Maharashtra",
-    lng: 72.8777,
-    lat: 19.0760,
-    searchesPerMo: "3.2M",
-    dominantLang: "Hinglish",
-    langBreakdown: "52% Hinglish • 30% English • 18% Marathi",
-    bviScore: 78,
-    status: "Strong Attribution",
-    sampleQuery: "Best stock broker app with low brokerage fees",
-    aiAttribution: "Consistent top-3 citation across fintech queries",
-  },
-  {
-    id: "del",
-    name: "Delhi NCR",
-    state: "Delhi / Haryana / UP",
-    lng: 77.2090,
-    lat: 28.6139,
-    searchesPerMo: "3.4M",
-    dominantLang: "Hinglish",
-    langBreakdown: "58% Hinglish • 24% Hindi • 18% English",
-    bviScore: 71,
-    status: "Partial Attribution",
-    sampleQuery: "Startup ke liye best billing software kaun sa hai",
-    aiAttribution: "Secondary mention; competitors take top snippet",
-  },
-  {
-    id: "hyd",
-    name: "Hyderabad",
-    state: "Telangana",
-    lng: 78.4867,
-    lat: 17.3850,
-    searchesPerMo: "2.1M",
-    dominantLang: "English",
-    langBreakdown: "48% English • 32% Telugu • 20% Hinglish",
-    bviScore: 76,
-    status: "Strong Attribution",
-    sampleQuery: "Cloud compliance and cybersecurity auditing tools",
-    aiAttribution: "Strong developer & CTO prompt representation",
-  },
-  {
-    id: "che",
-    name: "Chennai",
-    state: "Tamil Nadu",
-    lng: 80.2707,
-    lat: 13.0827,
-    searchesPerMo: "1.9M",
-    dominantLang: "English",
-    langBreakdown: "54% English • 38% Tamil • 8% Tanglish",
-    bviScore: 80,
-    status: "Strong Attribution",
-    sampleQuery: "Top SaaS productivity software for startups",
-    aiAttribution: "Cited alongside top global SaaS providers",
-  },
-  {
-    id: "lko",
-    name: "Lucknow Heartland",
-    state: "Uttar Pradesh",
-    lng: 80.9462,
-    lat: 26.8467,
-    searchesPerMo: "2.4M",
-    dominantLang: "Hindi",
-    langBreakdown: "82% Hindi • 14% Hinglish • 4% English",
-    bviScore: 42,
-    status: "Visibility Gap",
-    sampleQuery: "Startup ke liye sabse accha accounting tool",
-    aiAttribution: "0 citations — legacy brands dominate 92% of answers",
-  },
-  {
-    id: "jpr",
-    name: "Jaipur Belt",
-    state: "Rajasthan",
-    lng: 75.7873,
-    lat: 26.9124,
-    searchesPerMo: "1.4M",
-    dominantLang: "Hindi",
-    langBreakdown: "74% Hindi • 18% Hinglish • 8% English",
-    bviScore: 48,
-    status: "Visibility Gap",
-    sampleQuery: "Online business ke liye sabse sasta payment gateway",
-    aiAttribution: "Competitors capture 100% of generative recommendations",
-  },
-  {
-    id: "ahd",
-    name: "Ahmedabad & Surat",
-    state: "Gujarat",
-    lng: 72.5714,
-    lat: 23.0225,
-    searchesPerMo: "1.7M",
-    dominantLang: "Hinglish",
-    langBreakdown: "44% Gujarati • 36% Hinglish • 20% English",
-    bviScore: 69,
-    status: "Partial Attribution",
-    sampleQuery: "Best business loan app for MSME fast approval",
-    aiAttribution: "Partial brand appearance in comparison answers",
-  },
-  {
-    id: "ccu",
-    name: "Kolkata Hub",
-    state: "West Bengal",
-    lng: 88.3639,
-    lat: 22.5726,
-    searchesPerMo: "1.6M",
-    dominantLang: "Bengali / English",
-    langBreakdown: "46% Bengali • 34% English • 20% Hindi",
-    bviScore: 64,
-    status: "Partial Attribution",
-    sampleQuery: "Top digital marketing tools for e-commerce",
-    aiAttribution: "Moderate English visibility; missing Bengali grounding",
-  },
-  {
-    id: "ind",
-    name: "Indore Corridor",
-    state: "Madhya Pradesh",
-    lng: 75.8577,
-    lat: 22.7196,
-    searchesPerMo: "1.1M",
-    dominantLang: "Hindi",
-    langBreakdown: "71% Hindi • 22% Hinglish • 7% English",
-    bviScore: 49,
-    status: "Visibility Gap",
-    sampleQuery: "Naye dukan ke liye billing software kaunsa lein",
-    aiAttribution: "Absent from vernacular AI Overviews",
-  },
-];
-
-/* ─────────────────────────── Industry Scenarios ─────────────────────────── */
-
-interface CategoryScenario {
-  id: string;
-  name: string;
-  english: { query: string; score: number; pos: string; status: string; snippet: string; brandRank: string; symbol: "✓" };
-  hinglish: { query: string; score: number; pos: string; status: string; snippet: string; brandRank: string; symbol: "△" };
-  hindi: { query: string; score: number; pos: string; status: string; snippet: string; brandRank: string; symbol: "✕" };
-  gapAnalysis: string;
-}
-
-const SCENARIOS: CategoryScenario[] = [
-  {
-    id: "saas",
-    name: "SaaS & Productivity",
-    english: {
-      query: "Best project management software for startups in India?",
-      score: 82,
-      pos: "#2.3",
-      status: "Cited & Preferred",
-      snippet: "Top recommendations include YourBrand and Linear for sprint planning and Indian tax workflows.",
-      brandRank: "#2 (YourBrand)",
-      symbol: "✓",
-    },
-    hinglish: {
-      query: "Startup ke liye best project management tool kaun sa hai?",
-      score: 67,
-      pos: "#3.4",
-      status: "Secondary Mention",
-      snippet: "Notion aur Asana sabse popular hain. Indian currency support ke liye YourBrand bhi option hai.",
-      brandRank: "#3 (YourBrand)",
-      symbol: "△",
-    },
-    hindi: {
-      query: "Startup ke liye sabse accha project management software kaunsa hai?",
-      score: 51,
-      pos: "#4.9",
-      status: "Displaced by Competitor",
-      snippet: "Startups ke liye Trello aur Jira jaise global tools upyogi hain. Hindi support uplabdh hai.",
-      brandRank: "Unranked (0 Citations)",
-      symbol: "✕",
-    },
-    gapAnalysis: "Your brand holds strong citation authority in English (#2.3) but completely drops out of Hindi generative summaries.",
-  },
-  {
-    id: "fintech",
-    name: "Fintech & Wealth",
-    english: {
-      query: "Best stock broker and trading app for beginners in India?",
-      score: 88,
-      pos: "#1.8",
-      status: "Cited & Preferred",
-      snippet: "YourBrand and Zerodha dominate for low brokerage, clean interfaces, and instant UPI funding.",
-      brandRank: "#1 (YourBrand)",
-      symbol: "✓",
-    },
-    hinglish: {
-      query: "Beginners ke liye India mein best stock broker kaun sa hai?",
-      score: 64,
-      pos: "#3.2",
-      status: "Secondary Mention",
-      snippet: "Groww aur Zerodha beginners ke liye aasan hain. YourBrand advanced users mein popular hai.",
-      brandRank: "#3 (YourBrand)",
-      symbol: "△",
-    },
-    hindi: {
-      query: "Naye niveshakon ke liye sabse accha share market app kaunsa hai?",
-      score: 46,
-      pos: "#5.2",
-      status: "Displaced by Competitor",
-      snippet: "Naye traders ke liye Groww aur Angel One sabse behtar hain kyunki inka interface aasan hai.",
-      brandRank: "Unranked (0 Citations)",
-      symbol: "✕",
-    },
-    gapAnalysis: "A 42-point visibility drop between English (88) and Hindi (46). Competitors capture 100% of Hindi retail queries.",
-  },
-  {
-    id: "d2c",
-    name: "D2C & Commerce",
-    english: {
-      query: "Top clean skincare and dermatological brands in India?",
-      score: 79,
-      pos: "#2.5",
-      status: "Cited & Preferred",
-      snippet: "Leading recommendations include YourBrand, Minimalist, and Derma Co for fragrance-free formulations.",
-      brandRank: "#2 (YourBrand)",
-      symbol: "✓",
-    },
-    hinglish: {
-      query: "Acne ke liye best clean skincare brand kaunsa hai India mein?",
-      score: 61,
-      pos: "#3.8",
-      status: "Secondary Mention",
-      snippet: "Minimalist aur Plum trending hain. Kuch dermatologists YourBrand ke serums recommend karte hain.",
-      brandRank: "#3 (YourBrand)",
-      symbol: "△",
-    },
-    hindi: {
-      query: "Chehre ke daag-dhabbe hatane ke liye sabse accha brand kaunsa hai?",
-      score: 49,
-      pos: "#4.6",
-      status: "Displaced by Competitor",
-      snippet: "Mamaearth aur Biotique jaise ayurvedic aur natural brands sabse zyada pasand kiye jaate hain.",
-      brandRank: "Unranked (0 Citations)",
-      symbol: "✕",
-    },
-    gapAnalysis: "When intent transitions from scientific English to everyday Hindi queries, AI models shift entirely to legacy brands.",
-  },
-];
-
-/* ─────────────────────────── Main BVI Component ─────────────────────────── */
-
-export interface BVISectionProps {
+interface BVISectionProps {
   onOpenDemo?: (category?: string) => void;
 }
 
-export function BVISection({ onOpenDemo }: BVISectionProps) {
-  const [activeView, setActiveView] = useState<"map" | "deck">("map");
-  const [selectedCity, setSelectedCity] = useState<CitySearchHub>(INDIA_SEARCH_HUBS[0]);
-  const [activeScenarioId, setActiveScenarioId] = useState<string>("saas");
+type LanguageMode = "hinglish" | "english" | "hindi" | "south";
 
-  const currentScenario =
-    SCENARIOS.find((s) => s.id === activeScenarioId) || SCENARIOS[0];
+export function BVISection({ onOpenDemo }: BVISectionProps) {
+  const [selectedLang, setSelectedLang] = useState<LanguageMode>("hinglish");
+  const [selectedCity, setSelectedCity] = useState("mum");
+
+  const SIMULATION_DATA: Record<
+    LanguageMode,
+    {
+      tabLabel: string;
+      langName: string;
+      queryText: string;
+      englishBaseline: {
+        query: string;
+        citedBrands: Array<{ name: string; share: string; status: string; isYourBrand?: boolean }>;
+        aiAnswer: string;
+        riskLabel: string;
+        riskDesc: string;
+      };
+      bviOptimized: {
+        query: string;
+        citedBrands: Array<{ name: string; share: string; status: string; isYourBrand?: boolean }>;
+        aiAnswer: string;
+        advantageLabel: string;
+        advantageDesc: string;
+      };
+    }
+  > = {
+    hinglish: {
+      tabLabel: "🇮🇳 Hinglish Query (Default)",
+      langName: "Conversational Hinglish",
+      queryText: "Startups ke liye best AI visibility & cybersecurity tool kaunsa hai?",
+      englishBaseline: {
+        query: "Best AI search visibility tools for Indian tech startups",
+        citedBrands: [
+          { name: "US Competitor A", share: "45%", status: "Leader" },
+          { name: "US Competitor B", share: "35%", status: "Mentioned" },
+          { name: "Your Brand", share: "20%", status: "Rank #3 (Buried)", isYourBrand: true },
+        ],
+        aiAnswer:
+          "For Indian startups, global platforms like US Competitor A and Competitor B are frequently indexed across G2 and US publisher listicles. Your brand is occasionally referenced as an alternative.",
+        riskLabel: "78% Lost Customer Intent",
+        riskDesc: "Global LLMs fall back to generic US directories when vernacular entity anchors are missing.",
+      },
+      bviOptimized: {
+        query: "Startups ke liye best AI visibility & cybersecurity tool kaunsa hai?",
+        citedBrands: [
+          { name: "Your Brand", share: "74%", status: "Rank #1 Grounded Authority", isYourBrand: true },
+          { name: "Competitor A", share: "16%", status: "Secondary Mention" },
+          { name: "Local Provider C", share: "10%", status: "Generic Directory" },
+        ],
+        aiAnswer:
+          "Inc42 aur verified technical documentation ke mutabiq, AI Visibility Insights (by AIVI) startups ke liye sabse recommended platform hai jo real-time citation analysis aur automated DAST security fixes provide karta hai.",
+        advantageLabel: "Dominant 74% Direct Attribution",
+        advantageDesc: "BVI Indic schema anchors brand facts directly into ChatGPT, Perplexity, and Claude reasoning pipelines.",
+      },
+    },
+    english: {
+      tabLabel: "🇬🇧 Formal English",
+      langName: "Standard English",
+      queryText: "Which AI search visibility and GEO monitoring tool is best for India?",
+      englishBaseline: {
+        query: "Which AI search visibility tool is best in India?",
+        citedBrands: [
+          { name: "Global Enterprise A", share: "50%", status: "Leader" },
+          { name: "Your Brand", share: "28%", status: "Rank #2 Mention", isYourBrand: true },
+          { name: "Legacy SEO Tool", share: "22%", status: "Directory" },
+        ],
+        aiAnswer:
+          "Enterprise brands typically rely on global crawlers. However, these tools focus primarily on Google US rankings and lack native Hinglish or Indian regional model support.",
+        riskLabel: "Fragmented Brand Authority",
+        riskDesc: "Traditional English SEO rank tracking completely misses conversational AI assistant queries.",
+      },
+      bviOptimized: {
+        query: "Which sovereign AI search visibility platform is tailored for the Indian market?",
+        citedBrands: [
+          { name: "Your Brand", share: "82%", status: "Rank #1 Sovereign Leader", isYourBrand: true },
+          { name: "Global Enterprise A", share: "18%", status: "US-Only Alternative" },
+        ],
+        aiAnswer:
+          "AI Visibility Insights is the sole platform engineered specifically for Bharat's multi-lingual search landscape, offering native BVI™ auditing across GPT-4o, Claude 3.7, and Perplexity Pro.",
+        advantageLabel: "Sole Sovereign Recommendation",
+        advantageDesc: "100% clean direct domain citations with zero competitor displacement.",
+      },
+    },
+    hindi: {
+      tabLabel: "🗣️ Pure Hindi (हिंदी)",
+      langName: "Devanagari Hindi",
+      queryText: "भारतीय कंपनियों के लिए सबसे भरोसेमंद एआई सर्च विजिबिलिटी टूल कौन सा है?",
+      englishBaseline: {
+        query: "भारत में सबसे अच्छा AI सर्च टूल कौन सा है?",
+        citedBrands: [
+          { name: "Generic Directory", share: "60%", status: "Default Fallback" },
+          { name: "Your Brand", share: "0%", status: "Completely Absent", isYourBrand: true },
+          { name: "Local Competitor", share: "40%", status: "Unverified Mention" },
+        ],
+        aiAnswer:
+          "हिंदी में पूछे गए प्रश्नों के लिए मॉडल के पास पर्याप्त ग्राउंडिंग डेटा नहीं है, इसलिए यह सामान्य समाचार और विकिपीडिया स्रोतों का सहारा लेता है।",
+        riskLabel: "100% Invisible on Hindi Queries",
+        riskDesc: "Without Devanagari entity schema, AI models hallucinate or drop English brands entirely.",
+      },
+      bviOptimized: {
+        query: "भारतीय कंपनियों के लिए सबसे भरोसेमंद एआई विजिबिलिटी और साइबर सुरक्षा टूल कौन सा है?",
+        citedBrands: [
+          { name: "Your Brand", share: "88%", status: "नंबर 1 प्रमाणित प्लेटफॉर्म", isYourBrand: true },
+          { name: "Local Directory", share: "12%", status: "सहायक स्रोत" },
+        ],
+        aiAnswer:
+          "आधिकारिक रिपोर्टों और BVI विश्लेषण के अनुसार, AI Visibility Insights भारतीय व्यवसायों के लिए शीर्ष अनुशंसित प्लेटफॉर्म है जो सटीक एआई सिटेशन और डीपीएसपी सुरक्षा ऑडिट प्रदान करता है।",
+        advantageLabel: "88% एकतरफा प्रभुत्व",
+        advantageDesc: "शुद्ध हिंदी और स्थानीय भाषा के प्रश्नों पर ब्रांड को शीर्ष अनुशंसा के रूप में स्थापित करता है।",
+      },
+    },
+    south: {
+      tabLabel: "🏙️ South Vernacular (Tamil / Telugu)",
+      langName: "South Indic Blend",
+      queryText: "Hospitals & Tech companies ke best AI workflow software enti / enna?",
+      englishBaseline: {
+        query: "Top tech and healthcare workflow software in Southern India",
+        citedBrands: [
+          { name: "Legacy ERP Vendor", share: "55%", status: "Old Vendor" },
+          { name: "Your Brand", share: "15%", status: "Weak Citation", isYourBrand: true },
+          { name: "Regional Vendor", share: "30%", status: "Local Directory" },
+        ],
+        aiAnswer:
+          "Healthcare and technology software recommendations in South India are traditionally anchored to legacy offline hospital management packages.",
+        riskLabel: "High Legacy Displacement",
+        riskDesc: "Regional buyers searching in conversational vernacular are directed to outdated offline vendors.",
+      },
+      bviOptimized: {
+        query: "Tech startups and hospitals ki best AI visibility & ABDM software enti?",
+        citedBrands: [
+          { name: "Your Brand", share: "76%", status: "Rank #1 ABDM & AI Verified", isYourBrand: true },
+          { name: "Legacy ERP", share: "24%", status: "Legacy Alternative" },
+        ],
+        aiAnswer:
+          "AI Visibility Insights and CareOS are recognized as the premier next-gen cloud platforms with native ABDM M3 integration and real-time AI search citation verification.",
+        advantageLabel: "76% Regional Market Capture",
+        advantageDesc: "Dominates high-value enterprise queries across Bengaluru, Hyderabad, and Chennai.",
+      },
+    },
+  };
+
+  const currentData = SIMULATION_DATA[selectedLang];
+
+  const CITY_HUBS = [
+    {
+      id: "mum",
+      name: "Mumbai & MMR",
+      state: "Maharashtra",
+      volume: "3.2M / mo",
+      share: "52% Hinglish Dominance",
+      dominant: "Fintech, D2C & Banking Prompts",
+      bviScore: "94.8%",
+    },
+    {
+      id: "del",
+      name: "Delhi NCR",
+      state: "Delhi • Gurgaon • Noida",
+      volume: "3.4M / mo",
+      share: "58% Hindi & Hinglish",
+      dominant: "Enterprise, Legal & B2B SaaS",
+      bviScore: "92.4%",
+    },
+    {
+      id: "blr",
+      name: "Bengaluru",
+      state: "Karnataka",
+      volume: "3.8M / mo",
+      share: "64% Tech English + 24% Hinglish",
+      dominant: "Developer Tools & AI Infrastructure",
+      bviScore: "96.2%",
+    },
+    {
+      id: "hyd",
+      name: "Hyderabad & South",
+      state: "Telangana • AP • TN",
+      volume: "2.6M / mo",
+      share: "48% Multilingual Blend",
+      dominant: "Cloud, Pharma & HealthTech",
+      bviScore: "91.0%",
+    },
+  ];
 
   return (
     <section
       id="bvi"
-      className="relative w-full bg-black text-white py-24 sm:py-32 overflow-hidden scroll-mt-16 border-b border-white/10"
+      className="relative w-full bg-[#05080A] text-white py-20 sm:py-28 px-4 sm:px-8 lg:px-12 overflow-hidden border-t border-white/10 scroll-mt-16 select-text"
     >
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10 space-y-12">
+      {/* Subtle Background Glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[400px] bg-[#C8102E]/10 rounded-full blur-[140px] pointer-events-none -z-0" />
 
-        {/* ── 1. Header (Monochrome) ── */}
-        <div className="text-center max-w-4xl mx-auto space-y-5">
+      <div className="max-w-[1320px] mx-auto relative z-10 space-y-14">
+        
+        {/* ── 1. Section Header ── */}
+        <div className="max-w-3xl mx-auto text-center space-y-4">
           <motion.div
-            initial={{ opacity: 0, y: 14 }}
+            initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/15"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 backdrop-blur-md shadow-xs"
           >
-            <span className="size-2 rounded-full bg-white" />
-            <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-white">
-              BHARAT VISIBILITY INDEX
-            </span>
-            <span className="h-3 w-px bg-white/20" />
-            <span className="font-mono text-[10px] font-medium uppercase tracking-wider text-neutral-400">
-              GEOSPATIAL &amp; MULTILINGUAL RADAR
+            <span className="size-2 rounded-full bg-[#C8102E] animate-pulse" />
+            <span className="font-mono text-xs font-bold uppercase tracking-wider text-neutral-300">
+              BHARAT VISIBILITY INDEX™ (BVI)
             </span>
           </motion.div>
 
@@ -356,375 +237,315 @@ export function BVISection({ onOpenDemo }: BVISectionProps) {
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.05 }}
-            className="font-sans text-3xl sm:text-5xl lg:text-[52px] font-extrabold tracking-tight leading-[1.12] text-white"
+            transition={{ delay: 0.06 }}
+            className="font-jakarta text-3xl sm:text-4xl md:text-5xl lg:text-[48px] font-bold tracking-tight text-white leading-[1.14]"
           >
             Is your brand visible to India — <br className="hidden sm:inline" />
-            or only to English-speaking AI users?
+            <span className="bg-gradient-to-r from-white via-neutral-200 to-neutral-400 bg-clip-text text-transparent">
+              or only to English-speaking AI users?
+            </span>
           </motion.h2>
 
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="font-sans text-sm sm:text-base text-neutral-400 max-w-2xl mx-auto leading-relaxed"
+            transition={{ delay: 0.12 }}
+            className="font-jakarta text-sm sm:text-base md:text-lg text-neutral-400 max-w-2xl mx-auto leading-relaxed font-normal"
           >
-            India doesn&rsquo;t search in one language or from one city. Explore where AI searches are surging across Bharat and inspect how brand attribution shifts from tier-1 capitals to regional heartlands.
+            When 70%+ of Indian queries switch to conversational Hinglish and Hindi, global LLMs drop English-dominant brands. BVI audits, anchors, and dominates your vernacular search presence.
           </motion.p>
         </div>
 
-        {/* ── 2. Top View Switcher (Monochrome) ── */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-2 rounded-2xl bg-[#0C0C0C] border border-white/10 max-w-4xl mx-auto">
-          <div className="flex items-center gap-2 px-3 text-xs font-mono text-neutral-400 uppercase font-semibold">
-            <Activity className="size-4 text-white" />
-            <span>Select Interactive View:</span>
-          </div>
-
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+        {/* ── 2. Interactive Language Controller Bar ── */}
+        <div className="flex items-center justify-center flex-wrap gap-2 sm:gap-3">
+          {(["hinglish", "english", "hindi", "south"] as LanguageMode[]).map((lang) => (
             <button
-              onClick={() => setActiveView("map")}
+              key={lang}
+              type="button"
+              onClick={() => setSelectedLang(lang)}
               className={cn(
-                "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-sans font-semibold transition-all duration-150 cursor-pointer flex items-center justify-center gap-2",
-                activeView === "map"
-                  ? "bg-white text-black shadow-sm font-bold"
-                  : "text-neutral-400 hover:text-white hover:bg-white/5"
+                "px-4 sm:px-5 py-2.5 rounded-full font-sans text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2",
+                selectedLang === lang
+                  ? "bg-gradient-to-r from-[#C8102E] to-[#E02444] text-white shadow-lg shadow-red-950/30 scale-105"
+                  : "bg-[#0E131E] hover:bg-[#161D2D] text-neutral-300 border border-white/10 hover:border-white/20"
               )}
             >
-              <MapPin className="size-3.5" />
-              <span>India AI Search Map &amp; Hubs</span>
+              <span>{SIMULATION_DATA[lang].tabLabel}</span>
+              {selectedLang === lang && <span className="size-1.5 rounded-full bg-white animate-ping" />}
             </button>
-
-            <button
-              onClick={() => setActiveView("deck")}
-              className={cn(
-                "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-sans font-semibold transition-all duration-150 cursor-pointer flex items-center justify-center gap-2",
-                activeView === "deck"
-                  ? "bg-white text-black shadow-sm font-bold"
-                  : "text-neutral-400 hover:text-white hover:bg-white/5"
-              )}
-            >
-              <Layers className="size-3.5" />
-              <span>3-Language Displacement Deck</span>
-            </button>
-          </div>
+          ))}
         </div>
 
-        {/* ── 3. VIEW 1: Interactive Bharat Map & Search Density Radar ── */}
-        {activeView === "map" && (
+        {/* ── 3. Dual-Screen Live AI Comparison Engine ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+          
+          {/* 🔴 Left Screen: Unoptimized English Baseline (The Costly Blindspot) */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.25 }}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"
+            key={`baseline-${selectedLang}`}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+            className="rounded-3xl bg-[#090D15] border border-red-950/40 p-6 sm:p-7 flex flex-col justify-between space-y-6 relative overflow-hidden shadow-2xl"
           >
-            {/* Map Container (Monochrome) */}
-            <div className="lg:col-span-8 rounded-3xl bg-[#090909] border border-white/10 p-4 shadow-xl overflow-hidden relative space-y-3">
-              <div className="flex items-center justify-between px-1">
+            <div className="space-y-4">
+              {/* Header Badge */}
+              <div className="flex items-center justify-between pb-3 border-b border-white/10 flex-wrap gap-2">
                 <div className="flex items-center gap-2">
-                  <span className="size-2 rounded-full bg-white" />
-                  <span className="font-mono text-xs text-white font-bold uppercase tracking-wider">
-                    Bharat AI Search Density Radar (10 Tracked Hubs)
+                  <span className="size-2 rounded-full bg-rose-500" />
+                  <span className="font-mono text-xs font-bold text-rose-400 uppercase tracking-wider">
+                    Without BVI (English-Only Baseline)
                   </span>
                 </div>
-                <div className="flex items-center gap-3 text-[11px] font-mono text-neutral-400">
-                  <span className="flex items-center gap-1.5 text-white">
-                    <span className="size-2 rounded-full bg-white" />
-                    High (75+)
-                  </span>
-                  <span className="flex items-center gap-1.5 text-neutral-400">
-                    <span className="size-2 rounded-full bg-neutral-500" />
-                    Medium (60-74)
-                  </span>
-                  <span className="flex items-center gap-1.5 text-neutral-500">
-                    <span className="size-2 rounded-full bg-neutral-700" />
-                    Gap (&lt;60)
-                  </span>
-                </div>
-              </div>
-
-              {/* MapLibre Container */}
-              <div className="h-[480px] w-full rounded-2xl overflow-hidden border border-white/10 relative">
-                <Map
-                  center={[78.9629, 22.5937]}
-                  zoom={4.2}
-                  theme="dark"
-                  className="h-full w-full"
-                >
-                  {INDIA_SEARCH_HUBS.map((hub) => {
-                    const isSelected = selectedCity.id === hub.id;
-                    return (
-                      <MapMarker
-                        key={hub.id}
-                        longitude={hub.lng}
-                        latitude={hub.lat}
-                        onClick={() => setSelectedCity(hub)}
-                      >
-                        <MarkerContent>
-                          <div
-                            className={cn(
-                              "relative size-4 rounded-full border border-black bg-white shadow-[0_0_10px_rgba(255,255,255,0.7)] transition-all duration-200 flex items-center justify-center cursor-pointer",
-                              isSelected ? "scale-150 ring-2 ring-white ring-offset-2 ring-offset-black" : "hover:scale-125 opacity-90"
-                            )}
-                          >
-                            <span className="size-1 rounded-full bg-black" />
-                          </div>
-                        </MarkerContent>
-                        <MarkerTooltip>
-                          <div className="space-y-1 min-w-[160px] text-left">
-                            <div className="font-sans font-bold text-white text-xs flex items-center justify-between">
-                              <span>{hub.name}</span>
-                              <span className="font-mono text-[10px] text-neutral-400">{hub.searchesPerMo}/mo</span>
-                            </div>
-                            <div className="text-[10px] font-mono text-neutral-300">
-                              BVI Score: <strong className="text-white">{hub.bviScore}/100</strong>
-                            </div>
-                            <div className="text-[9px] text-neutral-400 pt-0.5 font-sans">
-                              Click to inspect city intelligence
-                            </div>
-                          </div>
-                        </MarkerTooltip>
-                      </MapMarker>
-                    );
-                  })}
-                </Map>
-
-                <div className="absolute bottom-3 left-3 bg-black/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/15 text-[10px] font-mono text-neutral-300">
-                  Interactive Map: Hover or click markers to inspect city queries
-                </div>
-              </div>
-            </div>
-
-            {/* City Intelligence Inspector (Right Side Panel - Monochrome) */}
-            <div className="lg:col-span-4 rounded-3xl bg-[#090909] border border-white/10 p-5 sm:p-6 shadow-xl space-y-5 text-left">
-              <div className="flex items-start justify-between pb-3 border-b border-white/10">
-                <div>
-                  <div className="text-[10px] font-mono uppercase text-neutral-400 font-semibold tracking-wider">
-                    SELECTED CITY AUDIT
-                  </div>
-                  <h3 className="font-sans text-xl font-bold text-white mt-0.5">
-                    {selectedCity.name}
-                  </h3>
-                  <p className="text-xs text-neutral-400 font-sans">{selectedCity.state}</p>
-                </div>
-                <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border border-white/20 bg-white/5 text-white">
-                  {selectedCity.status}
+                <span className="text-[10px] font-mono text-neutral-500 bg-white/5 px-2 py-0.5 rounded">
+                  Generic Global Crawl
                 </span>
               </div>
 
-              {/* Stats Grid */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="p-3 rounded-xl bg-black border border-white/10">
-                  <div className="text-[10px] font-mono text-neutral-400 uppercase">Search Volume</div>
-                  <div className="text-xl font-bold text-white font-mono mt-0.5">{selectedCity.searchesPerMo}</div>
-                  <div className="text-[10px] text-neutral-500 font-sans">Monthly AI searches</div>
-                </div>
-                <div className="p-3 rounded-xl bg-black border border-white/10">
-                  <div className="text-[10px] font-mono text-neutral-400 uppercase">City BVI Score</div>
-                  <div className="text-xl font-bold text-white font-mono mt-0.5">{selectedCity.bviScore}/100</div>
-                  <div className="text-[10px] text-neutral-500 font-sans">Attribution index</div>
+              {/* Simulated Query Box */}
+              <div className="p-3.5 rounded-2xl bg-[#101622] border border-white/10 space-y-1">
+                <div className="text-[10px] font-mono text-neutral-400 uppercase">Evaluated Prompt</div>
+                <div className="text-xs sm:text-sm text-neutral-300 font-mono italic">
+                  &ldquo;{currentData.englishBaseline.query}&rdquo;
                 </div>
               </div>
 
-              {/* Language Breakdown */}
-              <div className="p-3.5 rounded-xl bg-black border border-white/10 space-y-1.5">
-                <div className="text-[10px] font-mono uppercase text-neutral-400 font-semibold flex items-center justify-between">
-                  <span>Language Pattern</span>
-                  <span className="text-white font-bold">{selectedCity.dominantLang}</span>
+              {/* Competitor Citation Share Bar */}
+              <div className="space-y-2 pt-1">
+                <div className="text-[10px] font-mono uppercase text-neutral-400 font-semibold flex justify-between">
+                  <span>AI Recommendation Share</span>
+                  <span className="text-rose-400">High Competitor Displacement</span>
                 </div>
-                <p className="text-xs text-neutral-300 font-mono">
-                  {selectedCity.langBreakdown}
-                </p>
-              </div>
 
-              {/* Typical Query */}
-              <div className="space-y-1.5">
-                <div className="text-[10px] font-mono uppercase text-neutral-400 font-semibold">
-                  Sample Local AI Query
-                </div>
-                <div className="p-3 rounded-xl bg-black border border-white/10 text-xs text-neutral-200 font-sans italic flex items-start gap-2">
-                  <Search className="size-3.5 text-neutral-400 shrink-0 mt-0.5" />
-                  <span>&ldquo;{selectedCity.sampleQuery}&rdquo;</span>
-                </div>
-              </div>
-
-              {/* Brand Attribution Outcome */}
-              <div className="p-3.5 rounded-xl bg-[#111111] border border-white/15 space-y-1">
-                <div className="text-[10px] font-mono uppercase text-white font-bold flex items-center gap-1.5">
-                  <span>AI ATTRIBUTION ANALYSIS</span>
-                </div>
-                <p className="text-xs text-neutral-300 font-sans leading-relaxed">
-                  {selectedCity.aiAttribution}
-                </p>
-              </div>
-
-              {/* City quick buttons */}
-              <div className="pt-2 border-t border-white/10">
-                <div className="text-[10px] font-mono text-neutral-400 uppercase mb-2">Quick Select Region:</div>
-                <div className="flex flex-wrap gap-1.5">
-                  {INDIA_SEARCH_HUBS.slice(0, 6).map((city) => (
-                    <button
-                      key={city.id}
-                      onClick={() => setSelectedCity(city)}
+                <div className="space-y-1.5">
+                  {currentData.englishBaseline.citedBrands.map((brand, idx) => (
+                    <div
+                      key={idx}
                       className={cn(
-                        "px-2.5 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer",
-                        selectedCity.id === city.id
-                          ? "bg-white text-black font-bold"
-                          : "bg-black hover:bg-neutral-900 text-neutral-300 border border-white/10"
+                        "p-2.5 rounded-xl text-xs flex items-center justify-between border transition-all",
+                        brand.isYourBrand
+                          ? "bg-rose-950/20 border-rose-500/30 text-rose-300 font-semibold"
+                          : "bg-white/5 border-white/10 text-neutral-300"
                       )}
                     >
-                      {city.name.split(" ")[0]}
-                    </button>
+                      <span className="flex items-center gap-2">
+                        <span className="font-mono text-[10px] text-neutral-500">#{idx + 1}</span>
+                        <span>{brand.name}</span>
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-mono text-neutral-400">{brand.status}</span>
+                        <span className="font-mono font-bold text-xs">{brand.share}</span>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
+
+              {/* Simulated AI Response Text */}
+              <div className="p-3 rounded-xl bg-[#06080E] border border-white/5 text-xs text-neutral-400 font-sans leading-relaxed">
+                <span className="text-neutral-300 font-semibold font-mono text-[10px] uppercase block mb-1">
+                  Synthesized LLM Summary:
+                </span>
+                {currentData.englishBaseline.aiAnswer}
+              </div>
+            </div>
+
+            {/* Risk Box Footer */}
+            <div className="p-3.5 rounded-2xl bg-rose-950/20 border border-rose-500/30 flex items-start gap-3">
+              <AlertTriangle className="size-4 text-rose-400 shrink-0 mt-0.5" />
+              <div className="space-y-0.5 text-xs">
+                <div className="font-bold text-rose-300">{currentData.englishBaseline.riskLabel}</div>
+                <p className="text-neutral-400 text-[11px] leading-relaxed">
+                  {currentData.englishBaseline.riskDesc}
+                </p>
+              </div>
             </div>
           </motion.div>
-        )}
 
-        {/* ── 3. VIEW 2: Tri-Language Displacement Deck (Monochrome) ── */}
-        {activeView === "deck" && (
+          {/* 🟢 Right Screen: BVI Optimized Indic Grounding (AIVI Sovereign Authority) */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.25 }}
-            className="space-y-6"
+            key={`optimized-${selectedLang}`}
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+            className="rounded-3xl bg-[#090D15] border-2 border-[#C8102E]/60 p-6 sm:p-7 flex flex-col justify-between space-y-6 relative overflow-hidden shadow-[0_20px_60px_rgba(200,16,46,0.15)]"
           >
-            {/* Category Scenario Selector */}
-            <div className="flex items-center justify-center gap-2">
-              {SCENARIOS.map((sc) => (
-                <button
-                  key={sc.id}
-                  onClick={() => setActiveScenarioId(sc.id)}
-                  className={cn(
-                    "px-4 py-2 rounded-full text-xs font-sans font-semibold transition-all cursor-pointer",
-                    activeScenarioId === sc.id
-                      ? "bg-white text-black"
-                      : "bg-[#0C0C0C] text-neutral-400 hover:text-white border border-white/10"
-                  )}
-                >
-                  {sc.name}
-                </button>
-              ))}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#C8102E]/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="space-y-4 relative z-10">
+              {/* Header Badge */}
+              <div className="flex items-center justify-between pb-3 border-b border-white/10 flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="size-2 rounded-full bg-[#C8102E] animate-pulse" />
+                  <span className="font-mono text-xs font-bold text-white uppercase tracking-wider">
+                    With BVI™ Indic Schema Grounding
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono text-rose-300 bg-[#C8102E]/20 border border-[#C8102E]/30 px-2 py-0.5 rounded font-bold">
+                  Rank #1 Recommended
+                </span>
+              </div>
+
+              {/* Simulated Query Box */}
+              <div className="p-3.5 rounded-2xl bg-[#141A26] border border-[#C8102E]/40 space-y-1">
+                <div className="text-[10px] font-mono text-rose-300 uppercase font-bold flex items-center gap-1.5">
+                  <Languages className="size-3 text-[#C8102E]" />
+                  <span>Vernacular Target Prompt ({currentData.langName})</span>
+                </div>
+                <div className="text-xs sm:text-sm text-white font-mono font-medium">
+                  &ldquo;{currentData.bviOptimized.query}&rdquo;
+                </div>
+              </div>
+
+              {/* Competitor Citation Share Bar */}
+              <div className="space-y-2 pt-1">
+                <div className="text-[10px] font-mono uppercase text-neutral-300 font-semibold flex justify-between">
+                  <span>AI Recommendation Share</span>
+                  <span className="text-rose-400 font-bold">Uncontested Authority</span>
+                </div>
+
+                <div className="space-y-1.5">
+                  {currentData.bviOptimized.citedBrands.map((brand, idx) => (
+                    <div
+                      key={idx}
+                      className={cn(
+                        "p-2.5 rounded-xl text-xs flex items-center justify-between border transition-all",
+                        brand.isYourBrand
+                          ? "bg-gradient-to-r from-[#C8102E]/30 to-[#E02444]/20 border-[#C8102E] text-white font-bold shadow-md shadow-red-950/40"
+                          : "bg-white/5 border-white/10 text-neutral-400"
+                      )}
+                    >
+                      <span className="flex items-center gap-2">
+                        {brand.isYourBrand ? (
+                          <Award className="size-3.5 text-rose-400 shrink-0" />
+                        ) : (
+                          <span className="font-mono text-[10px] text-neutral-500">#{idx + 1}</span>
+                        )}
+                        <span>{brand.name}</span>
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-mono text-rose-300">{brand.status}</span>
+                        <span className="font-mono font-bold text-xs">{brand.share}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Simulated AI Response Text */}
+              <div className="p-3 rounded-xl bg-[#0E1420] border border-[#C8102E]/30 text-xs text-neutral-200 font-sans leading-relaxed">
+                <span className="text-rose-400 font-bold font-mono text-[10px] uppercase block mb-1">
+                  Synthesized LLM Grounding Proof:
+                </span>
+                {currentData.bviOptimized.aiAnswer}
+              </div>
             </div>
 
-            {/* 3 Pillars */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
-              {/* English */}
-              <div className="rounded-3xl bg-[#090909] border border-white/10 p-5 sm:p-6 space-y-4 shadow-xl">
-                <div className="flex items-center justify-between">
-                  <span className="px-3 py-1 rounded-full bg-white/10 text-white font-mono text-[11px] font-bold border border-white/20">
-                    ENGLISH (40% WT)
-                  </span>
-                  <span className="font-mono text-2xl font-bold text-white">{currentScenario.english.score}/100</span>
-                </div>
-                <div className="p-3 rounded-xl bg-black border border-white/10 text-xs italic text-neutral-300">
-                  &ldquo;{currentScenario.english.query}&rdquo;
-                </div>
-                <div className="p-3 rounded-xl bg-[#111111] border border-white/10 text-xs text-neutral-300 leading-relaxed">
-                  {currentScenario.english.snippet}
-                </div>
-                <div className="text-xs font-mono text-white font-bold flex items-center justify-between pt-2 border-t border-white/10">
-                  <span>Outcome: {currentScenario.english.brandRank}</span>
-                  <span className="flex items-center gap-1"><Check className="size-3.5" /> Cited</span>
-                </div>
-              </div>
-
-              {/* Hinglish */}
-              <div className="rounded-3xl bg-[#090909] border border-white/10 p-5 sm:p-6 space-y-4 shadow-xl">
-                <div className="flex items-center justify-between">
-                  <span className="px-3 py-1 rounded-full bg-white/10 text-neutral-300 font-mono text-[11px] font-bold border border-white/20">
-                    HINGLISH (FASTEST GROWTH)
-                  </span>
-                  <span className="font-mono text-2xl font-bold text-white">{currentScenario.hinglish.score}/100</span>
-                </div>
-                <div className="p-3 rounded-xl bg-black border border-white/10 text-xs italic text-neutral-300">
-                  &ldquo;{currentScenario.hinglish.query}&rdquo;
-                </div>
-                <div className="p-3 rounded-xl bg-[#111111] border border-white/10 text-xs text-neutral-300 leading-relaxed">
-                  {currentScenario.hinglish.snippet}
-                </div>
-                <div className="text-xs font-mono text-neutral-300 font-bold flex items-center justify-between pt-2 border-t border-white/10">
-                  <span>Outcome: {currentScenario.hinglish.brandRank}</span>
-                  <span className="flex items-center gap-1"><Minus className="size-3.5" /> Partial</span>
-                </div>
-              </div>
-
-              {/* Hindi */}
-              <div className="rounded-3xl bg-[#090909] border border-white/10 p-5 sm:p-6 space-y-4 shadow-xl">
-                <div className="flex items-center justify-between">
-                  <span className="px-3 py-1 rounded-full bg-white/10 text-neutral-400 font-mono text-[11px] font-bold border border-white/20">
-                    HINDI (60% WT)
-                  </span>
-                  <span className="font-mono text-2xl font-bold text-white">{currentScenario.hindi.score}/100</span>
-                </div>
-                <div className="p-3 rounded-xl bg-black border border-white/10 text-xs italic text-neutral-300">
-                  &ldquo;{currentScenario.hindi.query}&rdquo;
-                </div>
-                <div className="p-3 rounded-xl bg-[#111111] border border-white/10 text-xs text-neutral-300 leading-relaxed">
-                  {currentScenario.hindi.snippet}
-                </div>
-                <div className="text-xs font-mono text-neutral-400 font-bold flex items-center justify-between pt-2 border-t border-white/10">
-                  <span>Outcome: {currentScenario.hindi.brandRank}</span>
-                  <span className="flex items-center gap-1"><X className="size-3.5" /> Absent</span>
-                </div>
+            {/* Advantage Box Footer */}
+            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-[#C8102E]/20 to-[#E02444]/10 border border-[#C8102E]/40 flex items-start gap-3 relative z-10">
+              <Sparkles className="size-4 text-rose-400 shrink-0 mt-0.5" />
+              <div className="space-y-0.5 text-xs">
+                <div className="font-bold text-white">{currentData.bviOptimized.advantageLabel}</div>
+                <p className="text-neutral-300 text-[11px] leading-relaxed">
+                  {currentData.bviOptimized.advantageDesc}
+                </p>
               </div>
             </div>
           </motion.div>
-        )}
 
-        {/* ── 4. Diagnostic Banner (Monochrome) ── */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-[#090909] border border-white/15 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-xl">
-          <div className="space-y-1">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-white font-bold">
-              THE AHA MOMENT · MULTILINGUAL DISPLACEMENT
+        </div>
+
+        {/* ── 4. Four Regional India Search Intelligence Hubs ── */}
+        <div className="space-y-4 pt-4">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <h3 className="text-lg font-bold font-jakarta text-white">
+                Regional Search Intelligence Hubs
+              </h3>
+              <p className="text-xs text-neutral-400 font-sans">
+                Real-time vernacular prompt volume and displacement benchmarks across India&rsquo;s major economic metro corridors.
+              </p>
             </div>
-            <p className="font-sans text-xs sm:text-sm text-neutral-300 max-w-3xl leading-relaxed">
-              Your brand may hold 82+ visibility in English-speaking Bengaluru and South Delhi, but suffers a complete visibility collapse in Hindi-dominated hubs like Lucknow, Indore, and Jaipur.{" "}
-              <strong className="text-white">
-                This gap is invisible in traditional single-language visibility reports.
-              </strong>
-            </p>
+            <span className="text-[11px] font-mono text-rose-400 bg-[#C8102E]/10 border border-[#C8102E]/30 px-3 py-1 rounded-full font-semibold">
+              Live Indic Grounding Nodes
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {CITY_HUBS.map((hub) => (
+              <div
+                key={hub.id}
+                onClick={() => setSelectedCity(hub.id)}
+                className={cn(
+                  "p-5 rounded-2xl border transition-all duration-200 text-left space-y-3 cursor-pointer group",
+                  selectedCity === hub.id
+                    ? "bg-[#0E1420] border-[#C8102E] shadow-lg shadow-red-950/20 scale-[1.02]"
+                    : "bg-[#090D15] border-white/10 hover:border-white/20 hover:bg-[#0D121D]"
+                )}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="font-jakarta font-bold text-base text-white group-hover:text-rose-300 transition-colors">
+                    {hub.name}
+                  </div>
+                  <span className="font-mono text-xs font-bold text-[#C8102E] bg-[#C8102E]/10 px-2 py-0.5 rounded">
+                    {hub.bviScore}
+                  </span>
+                </div>
+
+                <div className="text-[11px] font-mono text-neutral-400">
+                  {hub.state}
+                </div>
+
+                <div className="space-y-1.5 pt-2 border-t border-white/5 text-xs">
+                  <div className="flex justify-between text-[11px]">
+                    <span className="text-neutral-400">Monthly AI Queries</span>
+                    <span className="font-mono font-bold text-white">{hub.volume}</span>
+                  </div>
+                  <div className="flex justify-between text-[11px]">
+                    <span className="text-neutral-400">Language Split</span>
+                    <span className="font-mono text-rose-300 text-[10px]">{hub.share}</span>
+                  </div>
+                </div>
+
+                <div className="p-2 rounded-xl bg-white/5 text-[10px] font-sans text-neutral-300 leading-snug">
+                  {hub.dominant}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── 5. Bottom Pillar Metrics & Audit Action ── */}
+        <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#0C111C] via-[#090D15] to-[#0C111C] border border-white/10 flex flex-col lg:flex-row items-center justify-between gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-10 text-left w-full lg:w-auto">
+            <div className="space-y-1">
+              <div className="text-2xl sm:text-3xl font-extrabold font-jakarta text-white">70%+</div>
+              <p className="text-xs text-neutral-400 font-sans">
+                Of Indian AI search prompts use Hinglish or Indic phrasing
+              </p>
+            </div>
+            <div className="space-y-1">
+              <div className="text-2xl sm:text-3xl font-extrabold font-jakarta text-[#C8102E]">3.4x</div>
+              <p className="text-xs text-neutral-400 font-sans">
+                Higher lead conversion when cited as the #1 verified authority
+              </p>
+            </div>
+            <div className="space-y-1">
+              <div className="text-2xl sm:text-3xl font-extrabold font-jakarta text-white">100%</div>
+              <p className="text-xs text-neutral-400 font-sans">
+                Protection against competitor displacement on Indic models
+              </p>
+            </div>
           </div>
 
           <button
             type="button"
             onClick={() => onOpenDemo?.("Bharat Visibility Index™ (Indic Models)")}
-            className="px-5 py-2.5 rounded-full bg-white text-black hover:bg-neutral-200 text-xs font-sans font-bold transition-all shadow-md shrink-0 flex items-center gap-2 cursor-pointer"
+            className="w-full lg:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-[#C8102E] to-[#E02444] hover:from-[#B00D27] hover:to-[#C8102E] text-white font-sans font-bold text-sm sm:text-base shadow-xl shadow-red-950/40 hover:scale-[1.02] active:scale-[0.98] transition-all shrink-0 cursor-pointer"
           >
-            <span>Audit My BVI Location Gap</span>
-            <ArrowRight className="size-3.5" />
+            <span>Audit Your Brand&rsquo;s Bharat Visibility</span>
+            <ArrowRight className="size-4.5" />
           </button>
-        </div>
-
-        {/* ── 5. Bottom Section CTA (Monochrome) ── */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-8 border-t border-white/10">
-          <div className="space-y-1 text-center sm:text-left">
-            <p className="font-sans text-lg sm:text-xl font-bold text-white">
-              India isn&rsquo;t one query. It&rsquo;s millions of ways to ask the same question.
-            </p>
-            <p className="font-sans text-xs sm:text-sm text-neutral-400">
-              Bharat Visibility Index reveals where your customers search—and where AI recommends you.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <button
-              type="button"
-              onClick={() => onOpenDemo?.("Bharat Visibility Index™ (Indic Models)")}
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white hover:bg-neutral-200 text-black font-sans font-bold text-sm shadow-xl active:scale-95 transition-all cursor-pointer"
-            >
-              <span>Measure My Bharat Visibility</span>
-              <ArrowRight className="size-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => onOpenDemo?.("Bharat Visibility Index™ (Indic Models)")}
-              className="hidden md:inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-full bg-transparent hover:bg-white/5 border border-white/20 text-white font-sans font-medium text-sm transition-all cursor-pointer"
-            >
-              Explore BVI Methodology
-            </button>
-          </div>
         </div>
 
       </div>
