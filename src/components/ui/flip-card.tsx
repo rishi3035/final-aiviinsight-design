@@ -178,7 +178,7 @@ export function FlipCard({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "relative h-[340px] sm:h-[350px] w-full cursor-pointer outline-none transition-transform duration-500 ease-in-out [perspective:1200px] select-none",
+        "relative h-[430px] sm:h-[440px] lg:h-[450px] w-full cursor-pointer outline-none transition-transform duration-500 ease-in-out [perspective:1200px] select-none",
         !canFlip && "cursor-not-allowed opacity-70",
         className
       )}
@@ -192,7 +192,7 @@ export function FlipCard({
         {/* Front Face */}
         <div
           ref={frontRef}
-          className="absolute inset-0 flex h-full w-full flex-col justify-between rounded-2xl border border-neutral-800 bg-[#0E121A] text-white p-5 shadow-[0_16px_40px_rgba(0,0,0,0.5)] transition-[transform,filter] duration-[250ms] ease-out [backface-visibility:hidden] hover:border-neutral-700"
+          className="absolute inset-0 flex h-full w-full flex-col justify-between overflow-hidden rounded-2xl border border-neutral-800 bg-[#0E121A] text-white p-5 sm:p-6 shadow-[0_16px_40px_rgba(0,0,0,0.5)] transition-[transform,filter] duration-[250ms] ease-out [backface-visibility:hidden] hover:border-neutral-700"
         >
           {frontContent}
         </div>
@@ -200,7 +200,7 @@ export function FlipCard({
         {/* Back Face */}
         <div
           ref={backRef}
-          className="absolute inset-0 flex h-full w-full flex-col justify-between overflow-hidden rounded-2xl border border-[#C8102E]/40 bg-[#121722] text-white p-5 shadow-[0_16px_40px_rgba(200,16,46,0.15)] transition-[transform,filter] duration-[250ms] ease-out [backface-visibility:hidden] [transform:rotateY(180deg)]"
+          className="absolute inset-0 flex h-full w-full flex-col justify-between overflow-hidden rounded-2xl border border-[#C8102E]/40 bg-[#121722] text-white p-5 sm:p-6 shadow-[0_16px_40px_rgba(200,16,46,0.15)] transition-[transform,filter] duration-[250ms] ease-out [backface-visibility:hidden] [transform:rotateY(180deg)] hover:border-[#C8102E]/60"
         >
           {backContent}
         </div>

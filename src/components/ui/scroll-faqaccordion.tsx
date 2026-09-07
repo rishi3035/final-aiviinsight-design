@@ -86,11 +86,11 @@ export default function ScrollFAQAccordion({
   }, []);
 
   return (
-    <div className={cn("max-w-4xl mx-auto text-center py-16 sm:py-20", className)}>
-      <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2 text-neutral-900">
+    <div className={cn("max-w-4xl mx-auto text-center py-6 sm:py-10", className)}>
+      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-3 text-neutral-900 font-jakarta">
         Frequently Asked Questions
       </h2>
-      <p className="text-neutral-600 mb-10 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+      <p className="text-neutral-600 mb-10 text-sm sm:text-base max-w-xl mx-auto leading-relaxed font-sans">
         Hover over any question to instantly reveal the answer.
       </p>
 
@@ -106,7 +106,7 @@ export default function ScrollFAQAccordion({
             <Accordion.Item
               value={item.id.toString()}
               key={item.id}
-              className="mb-5"
+              className="mb-4 sm:mb-5"
               onMouseEnter={() => handleMouseEnter(item.id.toString())}
               onMouseLeave={handleMouseLeave}
             >
@@ -117,7 +117,7 @@ export default function ScrollFAQAccordion({
                 >
                   <div
                     className={cn(
-                      "relative flex items-center space-x-2 rounded-2xl px-4 py-3 transition-all duration-200 border shadow-xs cursor-pointer",
+                      "relative flex items-center space-x-2 rounded-2xl px-5 py-3.5 transition-all duration-200 border shadow-xs cursor-pointer",
                       isOpen
                         ? "bg-neutral-900 text-white border-neutral-900 font-semibold shadow-md"
                         : "bg-[#F4F4F5] text-neutral-800 border-neutral-200/80 hover:border-neutral-300 hover:bg-[#EAEAEA]",
@@ -163,10 +163,10 @@ export default function ScrollFAQAccordion({
                   transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
                   className="overflow-hidden"
                 >
-                  <div className="flex justify-end ml-7 md:ml-16 text-left">
+                  <div className="flex justify-end ml-6 sm:ml-12 md:ml-16 text-left">
                     <div
                       className={cn(
-                        "relative max-w-lg rounded-2xl px-5 py-4 text-white text-sm sm:text-base bg-gradient-to-r from-[#C8102E] to-[#E02444] shadow-lg shadow-[#C8102E]/20 leading-relaxed font-sans",
+                        "relative max-w-xl rounded-2xl px-6 py-4.5 text-white text-sm sm:text-base bg-gradient-to-r from-[#C8102E] to-[#E02444] shadow-lg shadow-[#C8102E]/20 leading-relaxed font-sans",
                         answerClassName
                       )}
                     >

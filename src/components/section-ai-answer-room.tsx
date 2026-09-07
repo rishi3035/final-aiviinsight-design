@@ -158,7 +158,7 @@ export function AIAnswerRoomSection({ onOpenDemo }: AIAnswerRoomProps) {
         </div>
 
         {/* ── 4 Property Cards (3D Tilt & Flip Interactive) ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 items-stretch">
           {cardsData.map((card, idx) => (
             <motion.div
               key={card.id}
@@ -166,46 +166,52 @@ export function AIAnswerRoomSection({ onOpenDemo }: AIAnswerRoomProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: idx * 0.08 }}
+              className="h-full flex"
             >
               <FlipCard
                 cardNumber={card.cardNumber}
                 isFlipped={flippedCards[card.id] ?? false}
                 onFlipChange={(num, flipped) => toggleCard(card.id, flipped)}
                 frontContent={
-                  <div className="flex h-full flex-col justify-between text-left space-y-3">
-                    {/* Top Row: Number & Status Badge */}
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-xs font-bold text-neutral-500">
-                        {card.cardNumber}
-                      </span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#C8102E]/10 text-rose-300 border border-[#C8102E]/30">
-                        {card.badge}
-                      </span>
+                  <div className="flex h-full flex-col justify-between text-left">
+                    {/* Top Section */}
+                    <div className="space-y-2.5">
+                      {/* Top Row: Number & Status Badge */}
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-xs font-bold text-neutral-500">
+                          {card.cardNumber}
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#C8102E]/10 text-rose-300 border border-[#C8102E]/30">
+                          {card.badge}
+                        </span>
+                      </div>
+
+                      {/* Card Title & Highlighted Status */}
+                      <div className="space-y-1">
+                        <h3 className="font-jakarta text-base sm:text-lg font-bold text-white tracking-tight leading-tight">
+                          {card.title}
+                        </h3>
+                        <div className="text-xs font-mono font-semibold text-[#C8102E] flex items-center gap-1.5">
+                          <Check className="size-3.5 shrink-0" />
+                          <span className="truncate">{card.status}</span>
+                        </div>
+                      </div>
+
+                      {/* Card Description */}
+                      <p className="text-xs text-neutral-400 font-sans leading-relaxed">
+                        {card.frontDesc}
+                      </p>
                     </div>
 
-                    {/* Card Title & Highlighted Status */}
-                    <div className="space-y-1.5">
-                      <h3 className="font-jakarta text-lg font-bold text-white tracking-tight">
-                        {card.title}
-                      </h3>
-                      <div className="text-xs font-mono font-semibold text-[#C8102E] flex items-center gap-1.5">
-                        <Check className="size-3.5" />
-                        <span>{card.status}</span>
+                    {/* Middle Section: Snippet Card */}
+                    <div className="my-auto py-2">
+                      <div className="p-2.5 sm:p-3 rounded-xl bg-[#141822]/90 border border-white/10 text-[11px] sm:text-xs text-neutral-300 font-sans leading-relaxed">
+                        {card.frontDetail}
                       </div>
                     </div>
 
-                    {/* Card Description */}
-                    <p className="text-xs text-neutral-400 font-sans leading-relaxed">
-                      {card.frontDesc}
-                    </p>
-
-                    {/* Snippet Card */}
-                    <div className="p-2.5 rounded-xl bg-[#141822] border border-white/5 text-[11px] text-neutral-300 font-sans leading-snug">
-                      {card.frontDetail}
-                    </div>
-
-                    {/* Flip Prompt */}
-                    <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-neutral-400">
+                    {/* Bottom Section: Flip Prompt */}
+                    <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-neutral-400 mt-auto">
                       <span>Property Snapshot</span>
                       <span className="text-[#C8102E] font-semibold flex items-center gap-1">
                         Flip ↻
@@ -214,37 +220,42 @@ export function AIAnswerRoomSection({ onOpenDemo }: AIAnswerRoomProps) {
                   </div>
                 }
                 backContent={
-                  <div className="flex h-full flex-col justify-between text-left space-y-3">
-                    {/* Back Header */}
-                    <div className="flex items-center justify-between pb-1.5 border-b border-white/10">
-                      <span className="font-mono text-xs font-bold text-rose-400 uppercase tracking-wider">
-                        {card.backTitle}
-                      </span>
-                      <span className="font-mono text-[10px] text-neutral-400">
-                        {card.cardNumber}
-                      </span>
+                  <div className="flex h-full flex-col justify-between text-left">
+                    {/* Top Section */}
+                    <div className="space-y-2.5">
+                      {/* Back Header */}
+                      <div className="flex items-center justify-between pb-2 border-b border-white/10">
+                        <span className="font-mono text-xs font-bold text-rose-400 uppercase tracking-wider">
+                          {card.backTitle}
+                        </span>
+                        <span className="font-mono text-[11px] text-neutral-400 font-bold">
+                          {card.cardNumber}
+                        </span>
+                      </div>
+
+                      {/* Metric Breakdown Rows */}
+                      <div className="space-y-1.5">
+                        {card.backItems.map((item, i) => (
+                          <div
+                            key={i}
+                            className="flex items-center justify-between p-2 rounded-lg bg-white/5 border border-white/10 text-xs font-sans"
+                          >
+                            <span className="text-neutral-300 text-[11px]">{item.label}</span>
+                            <span className="font-mono text-[#C8102E] font-bold text-xs">{item.value}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
 
-                    {/* Metric Breakdown Rows */}
-                    <div className="space-y-1.5">
-                      {card.backItems.map((item, i) => (
-                        <div
-                          key={i}
-                          className="flex items-center justify-between p-2 rounded-lg bg-white/5 border border-white/10 text-xs font-sans"
-                        >
-                          <span className="text-neutral-300 text-[11px]">{item.label}</span>
-                          <span className="font-mono text-[#C8102E] font-bold text-xs">{item.value}</span>
-                        </div>
-                      ))}
+                    {/* Middle Section: Back Note */}
+                    <div className="my-auto py-2">
+                      <div className="p-2.5 sm:p-3 rounded-xl bg-[#C8102E]/10 border border-[#C8102E]/25 text-[11px] sm:text-xs text-neutral-200 leading-relaxed font-sans">
+                        {card.backNote}
+                      </div>
                     </div>
 
-                    {/* Back Note */}
-                    <div className="p-2.5 rounded-xl bg-[#C8102E]/10 border border-[#C8102E]/25 text-[11px] text-neutral-200 leading-snug">
-                      {card.backNote}
-                    </div>
-
-                    {/* Flip Back Prompt */}
-                    <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-neutral-400">
+                    {/* Bottom Section: Flip Back Prompt */}
+                    <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-neutral-400 mt-auto">
                       <span>Grounding Proof</span>
                       <span className="text-rose-400 font-semibold flex items-center gap-1">
                         Flip back ↻
@@ -258,7 +269,7 @@ export function AIAnswerRoomSection({ onOpenDemo }: AIAnswerRoomProps) {
         </div>
 
         {/* ── Core Message at Bottom ── */}
-        <div className="pt-4 text-center space-y-1.5 border-t border-white/10">
+        <div className="mt-8 sm:mt-10 pt-6 text-center space-y-1.5 border-t border-white/10">
           <div className="font-mono text-xs sm:text-sm font-bold uppercase tracking-widest text-neutral-200">
             SCORE → ANSWER → INSIGHT
           </div>
