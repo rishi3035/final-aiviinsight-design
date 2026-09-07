@@ -160,12 +160,12 @@ export function Footer() {
             </h4>
             <ul className="space-y-2.5 font-sans text-sm text-neutral-300">
               <li>
-                <Link href="/#overview" className="hover:text-white transition-colors py-1 inline-block">
+                <Link href="/features" className="hover:text-white transition-colors py-1 inline-block">
                   Product overview
                 </Link>
               </li>
               <li>
-                <Link href="/#how-it-works" className="hover:text-white transition-colors py-1 inline-block">
+                <Link href="/how-it-works" className="hover:text-white transition-colors py-1 inline-block">
                   How it works
                 </Link>
               </li>

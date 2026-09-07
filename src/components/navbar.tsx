@@ -52,7 +52,7 @@ export function Navbar({ onOpenDemo }: NavbarProps) {
   const navItems = [
     { label: "Home", icon: Box, href: "/" },
     { label: "Features", icon: Layers, href: "/features" },
-    { label: "How It Works", icon: LayoutGrid, href: "/#answer-room" },
+    { label: "How It Works", icon: LayoutGrid, href: "/how-it-works" },
     { label: "Pricing", icon: Tag, href: "/#pricing" },
     { label: "Blog", icon: FileText, href: "/resources" },
   ];
