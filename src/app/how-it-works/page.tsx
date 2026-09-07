@@ -32,6 +32,7 @@ import { DemoModal } from "@/components/demo-modal";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ResearchBentoGrid } from "@/components/ui/research-bento-grid";
 import { cn } from "@/lib/utils";
 
 // 4 Interactive Visual Stages for the Left Screen
@@ -357,12 +358,47 @@ export default function HowItWorksPage() {
               </motion.p>
             </div>
 
-            {/* ── 2. The Split Showcase Section (Matching Attached Design) ── */}
-            <div 
-              className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start"
-              onMouseEnter={() => setIsAutoCycling(false)}
-              onMouseLeave={() => setIsAutoCycling(true)}
+            {/* ── 2. Primary Interactive Showcase: Multi-Model Research Bento Grid ── */}
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="w-full space-y-4"
             >
+              <div className="w-full rounded-[28px] border border-white/10 bg-[#080B12]/90 p-2 sm:p-4 shadow-2xl backdrop-blur-md">
+                <div className="min-h-[640px] sm:h-[660px] w-full">
+                  <ResearchBentoGrid
+                    monthlyPrice={1990}
+                    previousPrice={32000}
+                    currency="USD"
+                    defaultSelectedBrand={0}
+                    onPausedChange={(paused) => console.log({ paused })}
+                    onSelectedBrandChange={(index) => console.log({ index })}
+                  />
+                </div>
+              </div>
+            </motion.section>
+
+            {/* ── 3. Deep-Dive Execution Pipeline (Interactive Stage + Capabilities) ── */}
+            <div className="space-y-6">
+              <div className="max-w-3xl text-left space-y-2">
+                <div className="inline-flex items-center gap-2 text-xs font-mono text-rose-400 font-bold uppercase tracking-wider">
+                  <Activity className="size-3.5" />
+                  <span>Deep-Dive Subsystem Telemetry</span>
+                </div>
+                <h2 className="font-jakarta text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+                  Autonomous Multi-Engine Intelligence in Action
+                </h2>
+                <p className="font-sans text-xs sm:text-sm md:text-base text-neutral-400">
+                  Inspect how each telemetry node captures real-time search queries and enforces brand authority across LLM knowledge graphs.
+                </p>
+              </div>
+
+              <div 
+                className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start pt-2"
+                onMouseEnter={() => setIsAutoCycling(false)}
+                onMouseLeave={() => setIsAutoCycling(true)}
+              >
               
               {/* ═══ LEFT SIDE: Dynamic Interactive Visual Stage (Spans 5 cols) ═══ */}
               <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-4">
@@ -489,8 +525,9 @@ export default function HowItWorksPage() {
               </div>
 
             </div>
+          </div>
 
-            {/* ── 3. The 4-Step Pipeline Architecture ── */}
+            {/* ── 4. The 4-Step Pipeline Architecture ── */}
             <div className="space-y-8 pt-8">
               <div className="max-w-2xl mx-auto text-center space-y-3">
                 <h2 className="text-2xl sm:text-3xl font-bold font-jakarta text-white tracking-tight">
