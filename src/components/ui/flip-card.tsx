@@ -178,7 +178,7 @@ export function FlipCard({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "relative h-[430px] sm:h-[440px] lg:h-[450px] w-full cursor-pointer outline-none transition-transform duration-500 ease-in-out [perspective:1200px] select-none",
+        "relative h-[460px] sm:h-[470px] lg:h-[480px] w-full cursor-pointer outline-none transition-transform duration-500 ease-in-out [perspective:1200px] select-none",
         !canFlip && "cursor-not-allowed opacity-70",
         className
       )}
