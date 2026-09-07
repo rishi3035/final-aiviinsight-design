@@ -157,16 +157,16 @@ export default function ScrollFAQAccordion({
                   initial="collapsed"
                   animate={isOpen ? "open" : "collapsed"}
                   variants={{
-                    open: { opacity: 1, height: "auto", marginTop: 12 },
-                    collapsed: { opacity: 0, height: 0, marginTop: 0 },
+                    open: { opacity: 1, height: "auto", marginTop: 20, marginBottom: 28 },
+                    collapsed: { opacity: 0, height: 0, marginTop: 0, marginBottom: 0 },
                   }}
-                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                   className="overflow-hidden"
                 >
-                  <div className="flex justify-end ml-6 sm:ml-12 md:ml-16 text-left">
+                  <div className="flex justify-end pl-6 sm:pl-14 md:pl-20 pr-1 sm:pr-3 text-left">
                     <div
                       className={cn(
-                        "relative max-w-xl rounded-2xl px-6 py-4.5 text-white text-sm sm:text-base bg-gradient-to-r from-[#C8102E] to-[#E02444] shadow-lg shadow-[#C8102E]/20 leading-relaxed font-sans",
+                        "relative max-w-2xl w-full rounded-3xl p-6 sm:p-7 text-white text-sm sm:text-base bg-gradient-to-r from-[#C8102E] to-[#E02444] shadow-xl shadow-[#C8102E]/25 border border-white/15 leading-relaxed font-sans",
                         answerClassName
                       )}
                     >
