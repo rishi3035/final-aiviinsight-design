@@ -294,7 +294,10 @@ export function HeroMockup({ onOpenDemo }: HeroMockupProps) {
                 className="flex-1 flex overflow-hidden bg-[#07090E]"
               >
                 {/* ── 1. Left Navigation Sidebar ── */}
-                <div className="hidden md:flex w-[230px] lg:w-[250px] flex-col justify-between bg-[#0B0F17] border-r border-[#1B2232] p-3 text-xs shrink-0 select-none overflow-y-auto scrollbar-none">
+                <div
+                  data-lenis-prevent
+                  className="hidden md:flex w-[230px] lg:w-[250px] flex-col justify-between bg-[#0B0F17] border-r border-[#1B2232] p-3 text-xs shrink-0 select-none overflow-y-auto scrollbar-none overscroll-contain"
+                >
                   <div className="space-y-4">
                     
                     {/* Brand in Sidebar */}
@@ -461,7 +464,10 @@ export function HeroMockup({ onOpenDemo }: HeroMockupProps) {
                   </div>
 
                   {/* ── Scrollable Body Area ── */}
-                  <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 scrollbar-thin scrollbar-thumb-neutral-700 scrollbar-track-transparent text-left">
+                  <div
+                    data-lenis-prevent
+                    className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 scrollbar-thin scrollbar-thumb-neutral-700 scrollbar-track-transparent text-left overscroll-contain"
+                  >
                     
                     {/* Greeting & Header */}
                     <div className="flex items-center justify-between flex-wrap gap-3">
