@@ -218,59 +218,103 @@ export default function BlogPage() {
               </motion.p>
             </div>
 
-            {/* ── 2. Featured Master Article Card ── */}
+            {/* ── 2. Featured Master Article Card (Balanced 2-Column Showcase) ── */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               className="p-8 sm:p-10 lg:p-12 rounded-3xl bg-gradient-to-br from-[#0E121B] via-[#121824] to-[#0E121B] border border-white/15 hover:border-[#C8102E]/50 transition-all shadow-2xl relative overflow-hidden group text-left"
             >
-              <div className="absolute top-0 right-0 w-96 h-96 bg-[#C8102E]/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute top-0 right-0 w-96 h-96 bg-[#C8102E]/12 rounded-full blur-3xl pointer-events-none" />
 
-              <div className="relative z-10 space-y-6 max-w-4xl">
-                <div className="flex items-center gap-3 flex-wrap">
-                  <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#C8102E]/20 text-rose-300 border border-[#C8102E]/40 uppercase tracking-wider">
-                    Featured Master Blueprint
-                  </span>
-                  <div className="flex items-center gap-2 text-xs font-mono text-neutral-400">
-                    <Calendar className="size-3.5" />
-                    <span>{featuredArticle.date}</span>
-                    <span>•</span>
-                    <Clock className="size-3.5" />
-                    <span>{featuredArticle.readTime}</span>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center relative z-10">
+                
+                {/* Left Content Area (Spans 7 cols) */}
+                <div className="lg:col-span-7 space-y-6">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#C8102E]/20 text-rose-300 border border-[#C8102E]/40 uppercase tracking-wider">
+                      Featured Master Blueprint
+                    </span>
+                    <div className="flex items-center gap-2 text-xs font-mono text-neutral-400">
+                      <Calendar className="size-3.5" />
+                      <span>{featuredArticle.date}</span>
+                      <span>•</span>
+                      <Clock className="size-3.5" />
+                      <span>{featuredArticle.readTime}</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <h2 className="font-jakarta text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight group-hover:text-rose-100 transition-colors">
+                      {featuredArticle.title}
+                    </h2>
+                    <p className="font-sans text-sm sm:text-base text-neutral-300 leading-relaxed">
+                      {featuredArticle.summary}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-white/10 flex-wrap gap-4">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {featuredArticle.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2.5 py-0.5 rounded-lg text-xs font-mono bg-white/5 border border-white/10 text-neutral-300"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setIsDemoOpen(true)}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#C8102E] to-[#E02444] hover:from-[#B00D27] hover:to-[#C8102E] text-white font-sans font-bold text-xs sm:text-sm transition-all shadow-lg hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                    >
+                      <span>Read Full Research Report</span>
+                      <ArrowRight className="size-4" />
+                    </button>
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <h2 className="font-jakarta text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight group-hover:text-rose-100 transition-colors">
-                    {featuredArticle.title}
-                  </h2>
-                  <p className="font-sans text-sm sm:text-base text-neutral-300 leading-relaxed">
-                    {featuredArticle.summary}
-                  </p>
-                </div>
-
-                <div className="flex items-center justify-between pt-4 border-t border-white/10 flex-wrap gap-4">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {featuredArticle.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2.5 py-0.5 rounded-lg text-xs font-mono bg-white/5 border border-white/10 text-neutral-300"
-                      >
-                        #{tag}
+                {/* Right Visual Telemetry Card (Spans 5 cols) */}
+                <div className="lg:col-span-5 rounded-2xl bg-[#07090F]/95 border border-white/10 p-5 sm:p-6 space-y-4 shadow-xl text-left">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                    <div className="space-y-0.5">
+                      <span className="font-mono text-xs font-bold text-neutral-300 uppercase tracking-wider flex items-center gap-2">
+                        <span className="size-2 rounded-full bg-[#C8102E] animate-pulse" />
+                        <span>GEO Telemetry Matrix</span>
                       </span>
+                      <div className="text-[11px] text-neutral-500 font-sans">Multi-Hop Retrieval Benchmarks</div>
+                    </div>
+                    <span className="px-2 py-0.5 rounded-md font-mono text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                      Live Q3
+                    </span>
+                  </div>
+
+                  {/* Benchmark Model Rows */}
+                  <div className="space-y-2">
+                    {[
+                      { model: "ChatGPT 4o Search", weight: "48% Primary Domain", score: "99.4%", color: "text-emerald-400" },
+                      { model: "Perplexity Pro RAG", weight: "32% Editorial Anchor", score: "98.6%", color: "text-rose-400" },
+                      { model: "Claude 3.7 Reasoning", weight: "20% Verified Source", score: "97.8%", color: "text-blue-400" },
+                    ].map((item, i) => (
+                      <div key={i} className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between text-xs">
+                        <div className="space-y-0.5">
+                          <div className="font-jakarta font-bold text-white text-xs">{item.model}</div>
+                          <div className="text-[11px] text-neutral-400 font-sans">{item.weight}</div>
+                        </div>
+                        <span className={cn("font-mono font-bold text-xs", item.color)}>{item.score}</span>
+                      </div>
                     ))}
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => setIsDemoOpen(true)}
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#C8102E] to-[#E02444] hover:from-[#B00D27] hover:to-[#C8102E] text-white font-sans font-bold text-xs sm:text-sm transition-all shadow-lg hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
-                  >
-                    <span>Read Full Research Report</span>
-                    <ArrowRight className="size-4" />
-                  </button>
+                  {/* Bottom Verification Strip */}
+                  <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-neutral-400">
+                    <span>Grounding Consensus</span>
+                    <span className="text-emerald-400 font-bold">100% Factual SLA</span>
+                  </div>
                 </div>
+
               </div>
             </motion.div>
 
