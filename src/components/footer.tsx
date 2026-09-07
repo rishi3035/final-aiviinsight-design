@@ -263,7 +263,7 @@ export function Footer() {
           {/* Column 4: Trust Note & Back to Top */}
           <div className="space-y-4 flex flex-col justify-between">
             <div className="p-4 rounded-2xl bg-neutral-900/80 border border-neutral-800 space-y-2 text-left">
-              <div className="flex items-center gap-2 text-emerald-400 text-xs font-sora font-semibold">
+              <div className="flex items-center gap-2 text-[#C8102E] text-xs font-sora font-semibold">
                 <ShieldCheck className="size-4" />
                 <span>Verified Trust</span>
               </div>
@@ -278,7 +278,7 @@ export function Footer() {
               className="inline-flex items-center justify-between p-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-xs font-sora font-semibold text-neutral-300 hover:text-white transition-all group"
             >
               <span>Back to top</span>
-              <ArrowUp className="size-4 transition-transform duration-200 group-hover:-translate-y-0.5 text-[#FF7A1A]" />
+              <ArrowUp className="size-4 transition-transform duration-200 group-hover:-translate-y-0.5 text-[#C8102E]" />
             </button>
           </div>
 

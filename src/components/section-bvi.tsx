@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Zap,
-  ArrowUpRight,
   Shield,
   Layers,
   Sparkles,
@@ -97,18 +96,9 @@ export function BVISection({ onOpenDemo }: BVISectionProps) {
               
               {/* Left Column Inside Card 1 */}
               <div className="sm:col-span-6 space-y-4 text-left">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-[#FFB300] font-sans text-xs font-bold">
-                    <Zap className="size-4 fill-current" />
-                    <span>3.4x Faster than English SEO</span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => onOpenDemo?.("Bharat Visibility Index™ (Indic Models)")}
-                    className="size-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-colors cursor-pointer group-hover:scale-105"
-                  >
-                    <ArrowUpRight className="size-4.5" />
-                  </button>
+                <div className="flex items-center gap-1.5 text-[#FFB300] font-sans text-xs font-bold">
+                  <Zap className="size-4 fill-current" />
+                  <span>3.4x Faster than English SEO</span>
                 </div>
 
                 <div className="space-y-2">
@@ -196,18 +186,9 @@ export function BVISection({ onOpenDemo }: BVISectionProps) {
             transition={{ duration: 0.4, delay: 0.08 }}
             className="lg:col-span-5 rounded-3xl bg-[#0E121B] border border-white/10 hover:border-white/20 p-6 sm:p-7 flex flex-col justify-between space-y-5 text-left transition-all shadow-2xl group"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-[#B388FF] font-sans text-xs sm:text-sm font-bold">
-                <Languages className="size-4.5" />
-                <span>Indic LLM Grounding Pipeline</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => onOpenDemo?.("Bharat Visibility Index™ (Indic Models)")}
-                className="size-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-colors cursor-pointer group-hover:scale-105"
-              >
-                <ArrowUpRight className="size-4.5" />
-              </button>
+            <div className="flex items-center gap-2 text-[#B388FF] font-sans text-xs sm:text-sm font-bold">
+              <Languages className="size-4.5" />
+              <span>Indic LLM Grounding Pipeline</span>
             </div>
 
             <div className="space-y-2.5">
@@ -236,18 +217,9 @@ export function BVISection({ onOpenDemo }: BVISectionProps) {
             transition={{ duration: 0.4, delay: 0.12 }}
             className="md:col-span-1 lg:col-span-3 rounded-3xl bg-[#0E121B] border border-white/10 hover:border-white/20 p-5 sm:p-6 flex flex-col justify-between space-y-4 text-left transition-all shadow-xl group"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-white font-sans text-xs sm:text-sm font-bold">
-                <Shield className="size-4 text-[#C8102E]" />
-                <span>Protection+</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => onOpenDemo?.("Bharat Visibility Index™ (Indic Models)")}
-                className="size-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-colors cursor-pointer group-hover:scale-105"
-              >
-                <ArrowUpRight className="size-4" />
-              </button>
+            <div className="flex items-center gap-2 text-white font-sans text-xs sm:text-sm font-bold">
+              <Shield className="size-4 text-[#C8102E]" />
+              <span>Protection+</span>
             </div>
 
             <p className="text-xs sm:text-sm text-neutral-400 font-sans leading-relaxed">
@@ -267,18 +239,9 @@ export function BVISection({ onOpenDemo }: BVISectionProps) {
             transition={{ duration: 0.4, delay: 0.16 }}
             className="md:col-span-1 lg:col-span-3 rounded-3xl bg-[#0E121B] border border-white/10 hover:border-white/20 p-5 sm:p-6 flex flex-col justify-between space-y-4 text-left transition-all shadow-xl group"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-white font-sans text-xs sm:text-sm font-bold">
-                <Layers className="size-4 text-blue-400" />
-                <span>Multi-layers</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => onOpenDemo?.("Bharat Visibility Index™ (Indic Models)")}
-                className="size-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-colors cursor-pointer group-hover:scale-105"
-              >
-                <ArrowUpRight className="size-4" />
-              </button>
+            <div className="flex items-center gap-2 text-white font-sans text-xs sm:text-sm font-bold">
+              <Layers className="size-4 text-blue-400" />
+              <span>Multi-layers</span>
             </div>
 
             <p className="text-xs sm:text-sm text-neutral-400 font-sans leading-relaxed">
@@ -298,18 +261,9 @@ export function BVISection({ onOpenDemo }: BVISectionProps) {
             transition={{ duration: 0.4, delay: 0.2 }}
             className="md:col-span-1 lg:col-span-3 rounded-3xl bg-[#0E121B] border border-white/10 hover:border-white/20 p-5 sm:p-6 flex flex-col justify-between space-y-4 text-left transition-all shadow-xl group"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-emerald-400 font-sans text-xs sm:text-sm font-bold">
-                <Activity className="size-4" />
-                <span>Auto-fix system</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => onOpenDemo?.("Bharat Visibility Index™ (Indic Models)")}
-                className="size-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-colors cursor-pointer group-hover:scale-105"
-              >
-                <ArrowUpRight className="size-4" />
-              </button>
+            <div className="flex items-center gap-2 text-emerald-400 font-sans text-xs sm:text-sm font-bold">
+              <Activity className="size-4" />
+              <span>Auto-fix system</span>
             </div>
 
             <div className="space-y-1.5">
@@ -353,18 +307,9 @@ export function BVISection({ onOpenDemo }: BVISectionProps) {
             transition={{ duration: 0.4, delay: 0.24 }}
             className="md:col-span-1 lg:col-span-3 rounded-3xl bg-[#0E121B] border border-white/10 hover:border-white/20 p-5 sm:p-6 flex flex-col justify-between space-y-4 text-left transition-all shadow-xl group"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-rose-400 font-sans text-xs sm:text-sm font-bold">
-                <AlertCircle className="size-4" />
-                <span>Detections</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => onOpenDemo?.("Bharat Visibility Index™ (Indic Models)")}
-                className="size-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-colors cursor-pointer group-hover:scale-105"
-              >
-                <ArrowUpRight className="size-4" />
-              </button>
+            <div className="flex items-center gap-2 text-rose-400 font-sans text-xs sm:text-sm font-bold">
+              <AlertCircle className="size-4" />
+              <span>Detections</span>
             </div>
 
             <div className="space-y-1.5">

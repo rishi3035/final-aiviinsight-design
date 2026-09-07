@@ -98,7 +98,7 @@ export function Navbar({ onOpenDemo }: NavbarProps) {
                   href={item.href}
                   className="flex items-center gap-2 px-4 py-2 rounded-full bg-neutral-900 text-white text-xs font-semibold shadow-xs hover:bg-neutral-800 transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  <Icon className="size-4 text-[#FF7A1A]" />
+                  <Icon className="size-4 text-[#C8102E]" />
                   <span>{item.label}</span>
                 </Link>
               );
