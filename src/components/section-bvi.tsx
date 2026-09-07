@@ -76,7 +76,7 @@ export function BVISection({ onOpenDemo }: BVISectionProps) {
               transition={{ delay: 0.1 }}
               className="font-sans text-xs sm:text-sm md:text-base text-neutral-400 leading-relaxed max-w-lg lg:ml-auto"
             >
-              Protecting and anchoring your brand authority across 70%+ of Indian conversational search queries on ChatGPT, Claude, and Perplexity.
+              Institutional-grade semantic grounding and citation defense across 70%+ of Indian conversational search queries on ChatGPT, Claude, Perplexity, and Indic foundation models.
             </motion.p>
           </div>
         </div>
@@ -98,7 +98,7 @@ export function BVISection({ onOpenDemo }: BVISectionProps) {
               <div className="sm:col-span-6 space-y-4 text-left">
                 <div className="flex items-center gap-1.5 text-[#FFB300] font-sans text-xs font-bold">
                   <Zap className="size-4 fill-current" />
-                  <span>3.4x Faster than English SEO</span>
+                  <span>3.4× Velocity vs Legacy SEO</span>
                 </div>
 
                 <div className="space-y-2">
@@ -106,12 +106,12 @@ export function BVISection({ onOpenDemo }: BVISectionProps) {
                     &ldquo;Kaunsa SaaS tool best hai billing ke liye?&rdquo;
                   </h3>
                   <p className="text-xs sm:text-sm text-neutral-400 font-sans leading-relaxed">
-                    Captures high-intent Hinglish searches that traditional US keyword crawlers completely miss.
+                    Captures high-intent conversational Hinglish queries that legacy search crawlers and keyword indices fail to recognize.
                   </p>
                 </div>
 
                 <div className="text-xs text-neutral-400 font-sans">
-                  Anchors verified schema across Indian regional queries.
+                  Anchors verified enterprise schema across regional Indic queries.
                 </div>
               </div>
 
@@ -131,7 +131,7 @@ export function BVISection({ onOpenDemo }: BVISectionProps) {
                     94.8 <span className="text-sm font-normal text-neutral-400">/100</span>
                   </div>
                   <div className="text-xs font-mono text-emerald-400">
-                    Sovereign BVI Authority • Zero Hallucinations
+                    Sovereign BVI Authority • Zero Hallucinations SLA
                   </div>
                 </div>
 
@@ -196,7 +196,7 @@ export function BVISection({ onOpenDemo }: BVISectionProps) {
                 Devanagari, Hinglish &amp; Vernacular Context
               </h3>
               <p className="text-xs sm:text-sm text-neutral-400 font-sans leading-relaxed">
-                Direct entity anchoring across ChatGPT-4o, Claude 3.7, Perplexity Pro, and Sarvam Indic LLMs to prevent English competitor fallback.
+                Direct entity anchoring across ChatGPT-4o, Claude 3.7, Perplexity Pro, and Sarvam Indic LLMs to eliminate regional competitor fallback.
               </p>
             </div>
 
@@ -227,7 +227,7 @@ export function BVISection({ onOpenDemo }: BVISectionProps) {
             </p>
 
             <div className="text-xs font-mono text-rose-400 font-semibold pt-1">
-              100% Sovereign Coverage
+              100% Sovereign Coverage SLA
             </div>
           </motion.div>
 

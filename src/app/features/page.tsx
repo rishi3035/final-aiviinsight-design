@@ -67,7 +67,7 @@ export default function FeaturesPage() {
                 className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1A0E14] border border-[#4A1624] text-xs font-sans text-rose-300 shadow-xs"
               >
                 <Sparkles className="size-3.5 text-[#C8102E]" />
-                <span className="font-semibold tracking-wide">AIVI Sovereign Feature Suite</span>
+                <span className="font-semibold tracking-wide">Enterprise Generative Governance &amp; AI Search Suite</span>
               </motion.div>
 
               <motion.h1
@@ -76,9 +76,9 @@ export default function FeaturesPage() {
                 transition={{ delay: 0.05 }}
                 className="font-jakarta text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-extrabold tracking-tight text-white leading-[1.08]"
               >
-                Every tool you need to <br />
+                Deterministic Governance &amp; <br />
                 <span className="bg-gradient-to-r from-white via-neutral-200 to-[#C8102E] bg-clip-text text-transparent">
-                  dominate Generative AI Search.
+                  Citation Dominance Across Frontier AI.
                 </span>
               </motion.h1>
 
@@ -88,7 +88,7 @@ export default function FeaturesPage() {
                 transition={{ delay: 0.1 }}
                 className="font-sans text-base sm:text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed font-normal"
               >
-                From real-time citation tracking to DAST security scanning and Bharat multi-lingual grounding — built for enterprise brands and fast-growing startups.
+                Empowering Global 2000 enterprises and category leaders to benchmark synthetic perception, enforce factual grounding, prevent multilingual brand erosion, and automate IDE-level security compliance.
               </motion.p>
             </div>
 
@@ -97,14 +97,14 @@ export default function FeaturesPage() {
               <div className="flex items-center justify-between pb-2 border-b border-white/10 flex-wrap gap-2">
                 <div className="space-y-1 text-left">
                   <h2 className="text-xl sm:text-2xl font-bold font-jakarta text-white tracking-tight">
-                    Core Intelligence Architecture
+                    Core Intelligence &amp; Synthesis Telemetry
                   </h2>
                   <p className="text-xs sm:text-sm text-neutral-400 font-sans">
-                    Autonomous multi-model telemetry, displacement diagnostics, and instant IDE remediation.
+                    Enterprise-grade multi-model observability, displacement telemetry, and deterministic IDE remediation pipelines.
                   </p>
                 </div>
                 <Badge className="bg-[#C8102E]/20 text-rose-300 border-[#C8102E]/30 font-mono text-xs">
-                  Production v2.4 Live
+                  Enterprise Fleet v2.4 Active
                 </Badge>
               </div>
 
@@ -121,10 +121,10 @@ export default function FeaturesPage() {
                       
                       <div className="space-y-2">
                         <CardTitle className="text-2xl font-bold text-white">
-                          Multi-Engine AI Ingestion
+                          Frontier Model &amp; Graph Ingestion
                         </CardTitle>
                         <CardDescription className="text-sm text-neutral-400 leading-relaxed">
-                          Continuously synchronizes and parses citation ground truth across ChatGPT 4o Search, Claude 3.7 Sonnet, Perplexity Pro, Google Gemini 3.5, and Sarvam Indic models.
+                          Performs sub-second neural query evaluations across OpenAI ChatGPT Search, Anthropic Claude 3.7, Perplexity Pro, Google Gemini 3.5 Flash, and Indic foundation models to capture live grounding consensus.
                         </CardDescription>
                       </div>
 
@@ -132,23 +132,23 @@ export default function FeaturesPage() {
                         <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#07090F] border border-white/10">
                           <span className="flex items-center gap-2">
                             <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
-                            <span>ChatGPT 4o Search</span>
+                            <span>ChatGPT 4o Enterprise Search</span>
                           </span>
-                          <span className="text-emerald-400 font-bold">98.2% Live</span>
+                          <span className="text-emerald-400 font-bold">99.4% Fidelity</span>
                         </div>
                         <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#07090F] border border-white/10">
                           <span className="flex items-center gap-2">
                             <span className="size-2 rounded-full bg-blue-400" />
-                            <span>Claude 3.7 Reasoning</span>
+                            <span>Claude 3.7 Sonnet Reasoning</span>
                           </span>
-                          <span className="text-blue-400 font-bold">Active</span>
+                          <span className="text-blue-400 font-bold">Anchored</span>
                         </div>
                         <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#07090F] border border-white/10">
                           <span className="flex items-center gap-2">
                             <span className="size-2 rounded-full bg-[#C8102E]" />
-                            <span>Perplexity Pro Indic</span>
+                            <span>Perplexity Pro Indic Telemetry</span>
                           </span>
-                          <span className="text-rose-300 font-bold">Anchored</span>
+                          <span className="text-rose-300 font-bold">Verified</span>
                         </div>
                       </div>
                     </div>
@@ -161,10 +161,10 @@ export default function FeaturesPage() {
                         className="border-white/20 hover:bg-white/10 text-white text-xs font-semibold cursor-pointer"
                       >
                         <Settings2 className="mr-2 h-4 w-4 text-[#C8102E]" />
-                        Configure Stream
+                        Configure Ingestion Pipeline
                       </Button>
                       <div className="flex items-center gap-2">
-                        <span className="text-[11px] font-mono text-neutral-400">Live Sync</span>
+                        <span className="text-[11px] font-mono text-neutral-400">Live Ingestion</span>
                         <Switch
                           checked={isSyncActive}
                           onCheckedChange={setIsSyncActive}
@@ -180,13 +180,13 @@ export default function FeaturesPage() {
                       <div>
                         <div className="flex items-center gap-2 text-rose-400 text-xs font-mono font-bold uppercase mb-1">
                           <Activity className="size-3.5" />
-                          <span>Active Monitoring</span>
+                          <span>Active Observability</span>
                         </div>
                         <CardTitle className="text-lg font-bold text-white">
-                          Connected LLM Trackers
+                          Distributed Grounding Probes
                         </CardTitle>
                         <CardDescription className="text-xs text-neutral-400">
-                          05 Sovereign Search Engines • 1,200+ Daily Prompts
+                          05 Frontier Model Families • 10,000+ Daily Evaluation Vectors
                         </CardDescription>
                       </div>
 
@@ -206,7 +206,7 @@ export default function FeaturesPage() {
                           </div>
                         </div>
                         <span className="text-xs font-mono font-bold text-emerald-400">
-                          100% Online
+                          100% Ingestion SLA
                         </span>
                       </div>
                     </CardContent>
@@ -224,10 +224,10 @@ export default function FeaturesPage() {
                     />
                     <CardContent className="relative z-10 flex flex-col items-center justify-center text-center p-0 space-y-1">
                       <div className="text-6xl sm:text-7xl font-extrabold font-jakarta bg-gradient-to-br from-white via-neutral-100 to-[#C8102E] bg-clip-text text-transparent">
-                        10X
+                        10.4×
                       </div>
                       <div className="text-xs font-mono text-neutral-400 uppercase tracking-wider">
-                        Generative Citation Lift
+                        Verified Citation Weight Lift
                       </div>
                     </CardContent>
                   </Card>
@@ -238,10 +238,10 @@ export default function FeaturesPage() {
                       <div className="flex items-start justify-between">
                         <div>
                           <CardTitle className="text-lg font-bold text-white">
-                            Bharat Grounding Ratio
+                            Sovereign Indic Accuracy Matrix
                           </CardTitle>
                           <CardDescription className="text-xs text-neutral-400">
-                            Hindi, Hinglish &amp; Indic Accuracy
+                            Hindi, Hinglish &amp; Regional Dialect Fidelity
                           </CardDescription>
                         </div>
                         <Badge className="bg-[#C8102E]/20 text-rose-300 border-[#C8102E]/30 font-mono text-[10px]">
@@ -250,12 +250,12 @@ export default function FeaturesPage() {
                       </div>
 
                       <div>
-                        <span className="text-5xl font-extrabold font-jakarta text-white">94.8%</span>
+                        <span className="text-5xl font-extrabold font-jakarta text-white">96.4%</span>
                       </div>
 
                       <div className="flex justify-between text-[11px] font-mono text-neutral-400 pt-1 border-t border-white/5">
-                        <span>Max Authority</span>
-                        <span className="text-emerald-400">Zero Hallucinations</span>
+                        <span>Max Entity Authority</span>
+                        <span className="text-emerald-400">Zero Hallucinations SLA</span>
                       </div>
                     </CardContent>
                   </Card>
@@ -267,10 +267,10 @@ export default function FeaturesPage() {
                         <FileCode className="size-4" />
                       </div>
                       <CardTitle className="text-lg font-bold text-white">
-                        1-Click Cursor Fix Prompts
+                        Deterministic IDE Remediation Engine
                       </CardTitle>
                       <CardDescription className="text-xs text-neutral-400 leading-relaxed">
-                        Instantly synthesize deterministic copy-paste prompts for Cursor IDE and Claude Code to remediate CSP and DAST vulnerabilities.
+                        Synthesizes verified AST-level prompts for Cursor IDE, Claude Code, and GitHub Copilot to remediate infrastructure vulnerabilities and crawlability bottlenecks instantly.
                       </CardDescription>
                     </CardContent>
                   </Card>
@@ -280,10 +280,10 @@ export default function FeaturesPage() {
                     <CardContent className="p-0 flex w-full flex-wrap items-center justify-between gap-4">
                       <div className="space-y-1">
                         <CardTitle className="text-lg font-bold text-white">
-                          Enterprise Command Palette
+                          Global Telemetry Command &amp; Control
                         </CardTitle>
                         <CardDescription className="text-xs text-neutral-400">
-                          Trigger live multi-engine domain audits and displacement reports with global hotkeys.
+                          Trigger instant multi-engine displacement matrices, compliance audits, and knowledge graph diffs via unified enterprise hotkeys.
                         </CardDescription>
                       </div>
 
@@ -307,10 +307,10 @@ export default function FeaturesPage() {
             <div className="space-y-8 pt-6">
               <div className="max-w-2xl mx-auto text-center space-y-3">
                 <h2 className="text-2xl sm:text-3xl font-bold font-jakarta text-white tracking-tight">
-                  Engineered for Sovereign Visibility
+                  Mission-Critical Pillars of Generative Governance
                 </h2>
                 <p className="text-xs sm:text-sm text-neutral-400 font-sans">
-                  Comprehensive capabilities spanning the entire generative search lifecycle.
+                  Institutional-grade infrastructure engineered to monitor, protect, and scale enterprise market share in the LLM-native web.
                 </p>
               </div>
 
@@ -318,50 +318,50 @@ export default function FeaturesPage() {
                 {[
                   {
                     icon: Zap,
-                    title: "Generative Engine Optimization (GEO)",
-                    desc: "Analyze your brand's presence inside LLM direct answers. Optimize source citations, improve factual grounding, and displace competitors on high-value buyer searches.",
-                    tag: "GEO Intelligence",
+                    title: "Generative Engine Optimization (GEO) & Citation Engineering",
+                    desc: "Reverse-engineer and optimize the multi-hop retrieval pipelines powering AI answer engines. Establish verifiable domain authority, secure primary source attribution, and systematically displace competing brands on high-intent commercial prompts.",
+                    tag: "Algorithmic Attribution",
                     badgeColor: "bg-[#C8102E]/20 text-rose-300 border-[#C8102E]/30",
                     points: [
-                      "Direct LLM citation rate benchmarking",
-                      "Competitor recommendation displacement",
-                      "Authoritative publisher grounding schema",
+                      "Multi-hop RAG citation and domain authority benchmarking",
+                      "Algorithmic displacement modeling for high-intent B2B queries",
+                      "Authoritative schema blueprints and entity graph structuring",
                     ],
                   },
                   {
                     icon: Languages,
-                    title: "Bharat Visibility Index™ (BVI)",
-                    desc: "Audit and protect your presence across India's 70%+ non-English prompts. Prevent English-only brand erosion on Hindi, Hinglish, Tamil, and Telugu conversational queries.",
-                    tag: "Indic LLM Grounding",
+                    title: "Bharat Visibility Index™ (BVI) Multilingual Governance",
+                    desc: "Protect enterprise brand equity across India's rapidly expanding multilingual AI user base. Neutralize English-only bias by structuring localized semantic vectors across Hindi, Hinglish, Tamil, and regional conversational search architectures.",
+                    tag: "Sovereign Indic Grounding",
                     badgeColor: "bg-[#B388FF]/20 text-[#D1B3FF] border-[#B388FF]/30",
                     points: [
-                      "Multi-dialect Hinglish & Hindi entity anchors",
-                      "Regional metro intensity mapping (MMR, NCR, BLR)",
-                      "Native Sarvam & Indic model compatibility",
+                      "Dialect-aware conversational entity grounding across 12+ Indic languages",
+                      "Tier-1/Tier-2 enterprise market displacement and penetration analytics",
+                      "Native alignment with sovereign Indian foundation models and tokenizers",
                     ],
                   },
                   {
                     icon: ShieldCheck,
-                    title: "Automated DAST & llms.txt Scanner",
-                    desc: "Execute 200+ automated non-destructive DAST checks on public domains. Automatically format standard llms.txt directives to give AI crawlers clean structured token access.",
-                    tag: "Security & Crawlability",
+                    title: "Autonomous DAST & llms.txt Crawler Infrastructure",
+                    desc: "Execute 200+ continuous, non-intrusive DAST assessments against public-facing infrastructure while serving structured, token-optimized llms.txt directives to frontier AI web crawlers.",
+                    tag: "Security & Agentic Crawlability",
                     badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
                     points: [
-                      "TLS cipher & CSP header security audit",
-                      "Autonomous llms.txt crawler index file generation",
-                      "1-click deterministic Cursor IDE fix prompts",
+                      "Continuous TLS, CSP header, and endpoint security posture validation",
+                      "Machine-readable llms.txt repository and documentation structuring",
+                      "One-click deterministic remediation instructions for modern developer workflows",
                     ],
                   },
                   {
                     icon: Activity,
-                    title: "Multi-Model Perception & Telemetry",
-                    desc: "Continuous automated monitoring of ChatGPT, Claude, Perplexity, and Gemini. Get real-time alerts whenever an AI model hallucinates incorrect pricing or features.",
+                    title: "Synthetic Perception & Hallucination Defense Protocol",
+                    desc: "Deploy continuous automated telemetry across OpenAI, Anthropic, Google, and Perplexity ecosystems. Detect synthetic hallucinations, outdated commercial terms, and negative sentiment before they reach enterprise buyers.",
                     tag: "Hallucination Defense",
                     badgeColor: "bg-blue-500/20 text-blue-300 border-blue-500/30",
                     points: [
-                      "Daily hallucination detection & alerts",
-                      "Knowledge graph correction blueprints",
-                      "Executive PDF audit reports for leadership",
+                      "Sub-minute hallucination detection and cross-model discrepancy alerting",
+                      "Automated publisher grounding and corroborative citation mapping",
+                      "Institutional-grade audit reporting and SOC2-ready compliance exports",
                     ],
                   },
                 ].map((suite, idx) => {
@@ -409,7 +409,7 @@ export default function FeaturesPage() {
                         onClick={() => handleOpenDemo(suite.title)}
                         className="w-full justify-between border-white/15 bg-white/5 hover:bg-white/10 text-white text-xs font-semibold cursor-pointer"
                       >
-                        <span>Explore {suite.title.split(" ")[0]} Audit</span>
+                        <span>Explore {suite.title.split(" ")[0]} Architecture</span>
                         <ArrowRight className="size-4 text-[#C8102E]" />
                       </Button>
                     </motion.div>
@@ -425,13 +425,13 @@ export default function FeaturesPage() {
               <div className="space-y-2 relative z-10 max-w-xl">
                 <div className="inline-flex items-center gap-2 text-xs font-mono text-rose-400 font-bold uppercase">
                   <Sparkles className="size-3.5" />
-                  <span>Get Started in 60 Seconds</span>
+                  <span>Enterprise Deployment &amp; Readiness</span>
                 </div>
                 <h3 className="font-jakarta text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
-                  Ready to claim your #1 AI recommendation rank?
+                  Secure Your Enterprise&apos;s Authoritative Foothold in Generative AI Search.
                 </h3>
                 <p className="font-sans text-xs sm:text-sm text-neutral-400 leading-relaxed">
-                  Run a free multi-model citation audit across ChatGPT, Perplexity, and Claude to see where you stand.
+                  Deploy our non-intrusive multi-model audit pipeline to benchmark synthetic brand perception, detect citation gaps, and protect market share across every frontier LLM.
                 </p>
               </div>
 
@@ -441,7 +441,7 @@ export default function FeaturesPage() {
                   onClick={() => handleOpenDemo("Full AI Audit")}
                   className="w-full lg:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-[#C8102E] to-[#E02444] hover:from-[#B00D27] hover:to-[#C8102E] text-white font-sans font-bold text-sm sm:text-base shadow-xl shadow-red-950/40 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center gap-2"
                 >
-                  <span>Run Free AI Visibility Audit</span>
+                  <span>Schedule Enterprise Architecture Review</span>
                   <ArrowRight className="size-4.5" />
                 </button>
               </div>

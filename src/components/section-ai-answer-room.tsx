@@ -33,66 +33,66 @@ export function AIAnswerRoomSection({ onOpenDemo }: AIAnswerRoomProps) {
     {
       id: "brand-mentions",
       cardNumber: "01",
-      title: "Brand Mentions",
+      title: "Brand Synthesis",
       status: "Your Brand ✓",
-      badge: "88% Synthesized",
-      frontDesc: "Track direct AI brand synthesis across ChatGPT, Claude & Perplexity evaluation prompts.",
-      frontDetail: "Grounded in 109 of 124 evaluated queries with 94.8% brand authority sentiment.",
-      backTitle: "Deep Mention Metrics",
+      badge: "88% Verified Rate",
+      frontDesc: "Track direct brand synthesis rates and entity grounding across ChatGPT, Claude, and Perplexity evaluation prompts.",
+      frontDetail: "Grounded in 109 of 124 evaluated queries with 94.8% brand authority sentiment score.",
+      backTitle: "Deep Synthesis Metrics",
       backItems: [
         { label: "Direct AI Synthesis", value: "88% rate" },
         { label: "BVI Sentiment Score", value: "94.8%" },
         { label: "Top Query Trigger", value: "Enterprise GEO" },
       ],
-      backNote: "Synthesized alongside 2 tier-one publishers as the primary authoritative platform.",
+      backNote: "Synthesized alongside 2 tier-one industry publishers as the primary authoritative platform.",
     },
     {
       id: "ai-recommendations",
       cardNumber: "02",
-      title: "AI Recommendations",
+      title: "Model Recommendations",
       status: "Rank #1 Grounded ✓",
       badge: "Top Recommended",
-      frontDesc: "Determine which models pick your platform as the #1 recommended software solution.",
+      frontDesc: "Determine which frontier models identify your platform as the primary recommended enterprise solution.",
       frontDetail: "Ranked #1 for multilingual GEO, Bharat Visibility Index™, and autonomous llms.txt index.",
-      backTitle: "Model Breakdown",
+      backTitle: "Model Consensus Breakdown",
       backItems: [
         { label: "Perplexity Pro", value: "#1 Recommended" },
         { label: "ChatGPT GPT-4o", value: "#1 Recommended" },
         { label: "Claude 3.7", value: "#2 Alternative" },
       ],
-      backNote: "Dominant direct domain attribution across Perplexity and OpenAI search crawlers.",
+      backNote: "Dominant direct domain attribution across Perplexity Enterprise and OpenAI search crawlers.",
     },
     {
       id: "competitor-visibility",
       cardNumber: "03",
-      title: "Competitor Visibility",
+      title: "Displacement Telemetry",
       status: "Competitor A & B ✓",
       badge: "Displacement Map",
-      frontDesc: "Identify which competitors appear beside you and win secondary prompt variations.",
+      frontDesc: "Identify competing entities occupying secondary prompt variations and measure algorithmic displacement exposure.",
       frontDetail: "Competitor A leads in Reddit r/SaaS forum queries and legacy software listicles.",
-      backTitle: "Gap & Displacement",
+      backTitle: "Displacement & Recapture",
       backItems: [
         { label: "Forum Dominance", value: "54% Competitor" },
         { label: "Recapture Potential", value: "+35% Market" },
         { label: "Displacement Rate", value: "12% Total" },
       ],
-      backNote: "Deploy autonomous llms.txt & schema blueprints to displace competitors in forum queries.",
+      backNote: "Deploy autonomous llms.txt & schema blueprints to systematically displace competing entities.",
     },
     {
       id: "citation-sources",
       cardNumber: "04",
-      title: "Citation / Source Presence",
+      title: "Knowledge Graph Sources",
       status: "G2 · TechCrunch · Reddit ✓",
-      badge: "3 Tier-1 Sources",
-      frontDesc: "Inspect the exact URLs, training datasets, and live web sources that shape the AI output.",
+      badge: "Tier-1 Attribution",
+      frontDesc: "Inspect the exact verified URLs, technical documentation, and authoritative datasets ingested by LLM retrieval engines.",
       frontDetail: "Driven by 48% direct domain docs, 32% editorial benchmark, and 20% developer proof.",
-      backTitle: "Source Attribution",
+      backTitle: "Attribution Hierarchy",
       backItems: [
         { label: "Primary Domain", value: "48% weight" },
         { label: "Editorial Benchmark", value: "32% weight" },
         { label: "Community Threads", value: "20% weight" },
       ],
-      backNote: "Multi-layered grounding anchors brand facts securely against LLM hallucinations.",
+      backNote: "Multi-layered grounding anchors brand facts securely against generative LLM hallucinations.",
     },
   ];
 
@@ -140,7 +140,7 @@ export function AIAnswerRoomSection({ onOpenDemo }: AIAnswerRoomProps) {
             transition={{ delay: 0.12 }}
             className="font-jakarta text-sm sm:text-base md:text-lg text-neutral-400 max-w-2xl mx-auto leading-relaxed font-normal"
           >
-            Go beyond a score. See what AI said about your brand, who appeared beside you, and what sources shaped the answer.
+            Go beyond synthetic vanity scores. Inspect deterministic LLM responses, competitor displacement matrices, and the underlying knowledge graphs shaping frontier AI answers.
           </motion.p>
 
           {/* Live Question Pill */}
