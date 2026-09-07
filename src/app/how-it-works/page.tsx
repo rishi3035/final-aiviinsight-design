@@ -297,23 +297,32 @@ const CAPABILITY_CARDS = [
 export default function HowItWorksPage() {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const [selectedDemoCategory, setSelectedDemoCategory] = useState("Architecture Walkthrough");
+  const [activeTab, setActiveTab] = useState<"bento" | "simulator" | "capabilities">("bento");
   const [activeStageIndex, setActiveStageIndex] = useState(0);
   const [isAutoCycling, setIsAutoCycling] = useState(true);
 
-  // Auto-cycle stages every 2.8 seconds unless paused
+  // Auto-cycle stages every 2.8 seconds when simulator is active
   useEffect(() => {
-    if (!isAutoCycling) return;
+    if (!isAutoCycling || activeTab !== "simulator") return;
     const interval = setInterval(() => {
       setActiveStageIndex((prev) => (prev + 1) % VISUAL_STAGES.length);
     }, 2800);
     return () => clearInterval(interval);
-  }, [isAutoCycling]);
+  }, [isAutoCycling, activeTab]);
 
   const currentStage = VISUAL_STAGES[activeStageIndex];
 
   const handleOpenDemo = (category = "Architecture Walkthrough") => {
     setSelectedDemoCategory(category);
     setIsDemoOpen(true);
+  };
+
+  const selectStageFromCapability = (stageId: string) => {
+    const targetIdx = VISUAL_STAGES.findIndex((s) => s.id === stageId);
+    if (targetIdx !== -1) {
+      setActiveStageIndex(targetIdx);
+      setActiveTab("simulator");
+    }
   };
 
   return (
@@ -323,9 +332,9 @@ export default function HowItWorksPage() {
         <Navbar onOpenDemo={() => handleOpenDemo()} />
 
         <main className="flex-1 flex flex-col w-full pt-28 sm:pt-36 pb-20 px-4 sm:px-8 lg:px-12">
-          <div className="max-w-[1360px] mx-auto w-full space-y-20 sm:space-y-28">
+          <div className="max-w-[1360px] mx-auto w-full space-y-16 sm:space-y-24">
             
-            {/* ── 1. Page Header ── */}
+            {/* ── 1. Page Header & Master Command Center Hero ── */}
             <div className="max-w-4xl mx-auto text-center space-y-5">
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
@@ -333,7 +342,7 @@ export default function HowItWorksPage() {
                 className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1A0E14] border border-[#4A1624] text-xs font-sans text-rose-300 shadow-xs"
               >
                 <Sparkles className="size-3.5 text-[#C8102E]" />
-                <span className="font-semibold tracking-wide">Enterprise Workflow &amp; Execution Pipeline</span>
+                <span className="font-semibold tracking-wide">Autonomous Multi-Engine Intelligence &amp; Execution</span>
               </motion.div>
 
               <motion.h1
@@ -356,176 +365,300 @@ export default function HowItWorksPage() {
               >
                 From neural query ingestion to deterministic IDE remediation — explore the end-to-end architecture powering authoritative brand citations across ChatGPT, Perplexity, Claude, and Gemini.
               </motion.p>
+
+              {/* ── Creative Mode Switcher Pill Controller ── */}
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+                className="pt-2 flex flex-wrap items-center justify-center gap-2"
+              >
+                <div className="inline-flex items-center p-1.5 rounded-full bg-[#0E121B] border border-white/10 shadow-2xl gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("bento")}
+                    className={cn(
+                      "px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 font-jakarta",
+                      activeTab === "bento"
+                        ? "bg-gradient-to-r from-[#C8102E] to-[#E02444] text-white shadow-lg shadow-red-950/50 scale-[1.02]"
+                        : "text-neutral-400 hover:text-white hover:bg-white/5"
+                    )}
+                  >
+                    <Globe className="size-3.5 sm:size-4" />
+                    <span>Frontier Ingestion Grid</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("simulator")}
+                    className={cn(
+                      "px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 font-jakarta",
+                      activeTab === "simulator"
+                        ? "bg-gradient-to-r from-[#C8102E] to-[#E02444] text-white shadow-lg shadow-red-950/50 scale-[1.02]"
+                        : "text-neutral-400 hover:text-white hover:bg-white/5"
+                    )}
+                  >
+                    <Zap className="size-3.5 sm:size-4" />
+                    <span>Live Neural Simulator</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("capabilities")}
+                    className={cn(
+                      "px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 font-jakarta",
+                      activeTab === "capabilities"
+                        ? "bg-gradient-to-r from-[#C8102E] to-[#E02444] text-white shadow-lg shadow-red-950/50 scale-[1.02]"
+                        : "text-neutral-400 hover:text-white hover:bg-white/5"
+                    )}
+                  >
+                    <Layers className="size-3.5 sm:size-4" />
+                    <span>6 Engine Nodes</span>
+                  </button>
+                </div>
+              </motion.div>
             </div>
 
-            {/* ── 2. Primary Interactive Showcase: Multi-Model Research Bento Grid ── */}
-            <motion.section
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
-              className="w-full space-y-4"
-            >
-              <div className="w-full rounded-[28px] border border-white/10 bg-[#080B12]/90 p-2 sm:p-4 shadow-2xl backdrop-blur-md">
-                <div className="min-h-[640px] sm:h-[660px] w-full">
-                  <ResearchBentoGrid
-                    monthlyPrice={1990}
-                    previousPrice={32000}
-                    currency="USD"
-                    defaultSelectedBrand={0}
-                    onPausedChange={(paused) => console.log({ paused })}
-                    onSelectedBrandChange={(index) => console.log({ index })}
-                  />
-                </div>
-              </div>
-            </motion.section>
-
-            {/* ── 3. Deep-Dive Execution Pipeline (Interactive Stage + Capabilities) ── */}
-            <div className="space-y-6">
-              <div className="max-w-3xl text-left space-y-2">
-                <div className="inline-flex items-center gap-2 text-xs font-mono text-rose-400 font-bold uppercase tracking-wider">
-                  <Activity className="size-3.5" />
-                  <span>Deep-Dive Subsystem Telemetry</span>
-                </div>
-                <h2 className="font-jakarta text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
-                  Autonomous Multi-Engine Intelligence in Action
-                </h2>
-                <p className="font-sans text-xs sm:text-sm md:text-base text-neutral-400">
-                  Inspect how each telemetry node captures real-time search queries and enforces brand authority across LLM knowledge graphs.
-                </p>
-              </div>
-
-              <div 
-                className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start pt-2"
-                onMouseEnter={() => setIsAutoCycling(false)}
-                onMouseLeave={() => setIsAutoCycling(true)}
-              >
+            {/* ── 2. Integrated Interactive Telemetry Showcase (Dynamic Tab Views) ── */}
+            <div className="w-full space-y-6">
               
-              {/* ═══ LEFT SIDE: Dynamic Interactive Visual Stage (Spans 5 cols) ═══ */}
-              <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-4">
-                <div className="relative rounded-3xl bg-[#0E121B] border border-white/10 p-6 sm:p-7 shadow-2xl overflow-hidden group">
-                  {/* Subtle Background Radial Atmosphere */}
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-[#C8102E]/15 rounded-full blur-3xl pointer-events-none" />
-
-                  {/* Stage Header Controls */}
-                  <div className="flex items-center justify-between pb-4 border-b border-white/10 relative z-10">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-neutral-500">
-                        {currentStage.stageNumber} / 04
-                      </span>
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-[#C8102E]/20 text-rose-300 border border-[#C8102E]/30 font-semibold">
-                        {currentStage.stageTag}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-1.5">
-                      {VISUAL_STAGES.map((stage, idx) => (
-                        <button
-                          key={stage.id}
-                          onClick={() => setActiveStageIndex(idx)}
-                          className={cn(
-                            "size-2 rounded-full transition-all cursor-pointer",
-                            activeStageIndex === idx
-                              ? "bg-[#C8102E] w-6"
-                              : "bg-white/20 hover:bg-white/40"
-                          )}
-                          aria-label={`Jump to stage ${stage.stageNumber}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Stage Title */}
-                  <div className="py-4 text-left relative z-10">
-                    <h3 className="font-jakarta text-xl sm:text-2xl font-bold text-white tracking-tight">
-                      {currentStage.title}
-                    </h3>
-                  </div>
-
-                  {/* Dynamic Animated Content Viewport */}
-                  <div className="min-h-[290px] relative z-10 flex flex-col justify-center">
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={currentStage.id}
-                        initial={{ opacity: 0, y: 14, scale: 0.98 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -14, scale: 0.98 }}
-                        transition={{ duration: 0.35, ease: "easeOut" }}
-                      >
-                        {currentStage.render()}
-                      </motion.div>
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Bottom Auto-Play Indicator */}
-                  <div className="pt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-neutral-400 relative z-10">
-                    <span className="flex items-center gap-1.5">
-                      <Clock className="size-3.5 text-neutral-500" />
-                      <span>{isAutoCycling ? "Auto-cycling live pipeline" : "Paused on hover"}</span>
-                    </span>
-                    <button
-                      onClick={() => setActiveStageIndex((prev) => (prev + 1) % VISUAL_STAGES.length)}
-                      className="text-rose-400 hover:text-white transition-colors cursor-pointer flex items-center gap-1 font-semibold"
-                    >
-                      <span>Next Stage</span>
-                      <ChevronRight className="size-3.5" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Left Mini Caption */}
-                <p className="text-xs text-neutral-500 font-sans text-left px-2">
-                  Hover over any capability on the right to instantly sync live pipeline visuals.
-                </p>
-              </div>
-
-              {/* ═══ RIGHT SIDE: 6 Curvy Enterprise Capability Cards (Spans 7 cols) ═══ */}
-              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 text-left">
-                {CAPABILITY_CARDS.map((card, idx) => {
-                  const Icon = card.icon;
+              {/* Quick-Access Interactive Telemetry Ribbon */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3">
+                {[
+                  { id: "ingestion", label: "Multi-Model Ingestion", stat: "99.4% Consensus", icon: Bot, color: "text-emerald-400" },
+                  { id: "bvi", label: "Bharat Matrix", stat: "Indic Grounded", icon: Languages, color: "text-purple-400" },
+                  { id: "displacement", label: "Displacement Diff", stat: "Zero Fallback", icon: Zap, color: "text-rose-400" },
+                  { id: "security", label: "DAST & llms.txt", stat: "200+ Audits", icon: ShieldCheck, color: "text-cyan-400" },
+                  { id: "remediation", label: "Cursor AST Fix", stat: "<30s Synthesis", icon: FileCode, color: "text-blue-400" },
+                  { id: "alerts", label: "Real-Time Telemetry", stat: "Sub-Min Alerting", icon: Activity, color: "text-amber-400" },
+                ].map((item) => {
+                  const Icon = item.icon;
+                  const isStageActive = VISUAL_STAGES[activeStageIndex]?.id === item.id && activeTab === "simulator";
                   return (
-                    <motion.div
-                      key={card.title}
-                      initial={{ opacity: 0, y: 16 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: idx * 0.06 }}
-                      onMouseEnter={() => {
-                        const targetIdx = VISUAL_STAGES.findIndex((s) => s.id === card.id);
-                        if (targetIdx !== -1) setActiveStageIndex(targetIdx);
-                      }}
-                      className="p-6 rounded-3xl bg-[#0E121B] border border-white/10 hover:border-white/20 transition-all flex flex-col justify-between space-y-5 shadow-xl group hover:scale-[1.01] cursor-pointer"
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => selectStageFromCapability(item.id)}
+                      className={cn(
+                        "p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between space-y-1 group relative overflow-hidden",
+                        isStageActive
+                          ? "bg-[#1A0E14] border-[#C8102E] shadow-lg shadow-red-950/30 scale-[1.02]"
+                          : "bg-[#0E121B]/80 hover:bg-[#121824] border-white/10 hover:border-white/20"
+                      )}
                     >
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div className={cn("size-11 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-105", card.iconBg)}>
-                            <Icon className="size-5.5" />
-                          </div>
-                          <span className={cn("px-2.5 py-0.5 rounded-full text-[10px] font-mono border font-semibold", card.color)}>
-                            {card.badge}
-                          </span>
-                        </div>
-
-                        <div className="space-y-1.5">
-                          <h4 className="font-jakarta text-lg font-bold text-white tracking-tight">
-                            {card.title}
-                          </h4>
-                          <p className="font-sans text-xs text-neutral-400 leading-relaxed">
-                            {card.desc}
-                          </p>
-                        </div>
+                      <div className="flex items-center justify-between">
+                        <Icon className={cn("size-4 transition-transform group-hover:scale-110", item.color)} />
+                        <span className={cn("text-[10px] font-mono font-bold", item.color)}>{item.stat}</span>
                       </div>
-
-                      <div className="pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-neutral-400 group-hover:text-white transition-colors">
-                        <span>Inspect Flow</span>
-                        <ArrowRight className="size-3.5 text-[#C8102E] transition-transform group-hover:translate-x-1" />
+                      <div className="text-xs font-jakarta font-semibold text-neutral-200 truncate group-hover:text-white">
+                        {item.label}
                       </div>
-                    </motion.div>
+                    </button>
                   );
                 })}
               </div>
 
+              {/* Master Content Viewports */}
+              <AnimatePresence mode="wait">
+                {activeTab === "bento" && (
+                  <motion.div
+                    key="bento-view"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -16 }}
+                    transition={{ duration: 0.3 }}
+                    className="w-full rounded-[28px] border border-white/10 bg-[#080B12]/90 p-2 sm:p-4 shadow-2xl backdrop-blur-md"
+                  >
+                    <div className="min-h-[640px] sm:h-[660px] w-full">
+                      <ResearchBentoGrid
+                        monthlyPrice={1990}
+                        previousPrice={32000}
+                        currency="USD"
+                        defaultSelectedBrand={0}
+                        onPausedChange={(paused) => console.log({ paused })}
+                        onSelectedBrandChange={(index) => console.log({ index })}
+                      />
+                    </div>
+                  </motion.div>
+                )}
+
+                {activeTab === "simulator" && (
+                  <motion.div
+                    key="simulator-view"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -16 }}
+                    transition={{ duration: 0.3 }}
+                    className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start"
+                    onMouseEnter={() => setIsAutoCycling(false)}
+                    onMouseLeave={() => setIsAutoCycling(true)}
+                  >
+                    {/* LEFT STAGE: Visual Neural Simulator Viewport */}
+                    <div className="lg:col-span-6 space-y-4">
+                      <div className="relative rounded-3xl bg-[#0E121B] border border-white/10 p-6 sm:p-7 shadow-2xl overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#C8102E]/15 rounded-full blur-3xl pointer-events-none" />
+
+                        {/* Controls */}
+                        <div className="flex items-center justify-between pb-4 border-b border-white/10 relative z-10">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-xs font-bold text-neutral-500">
+                              {currentStage.stageNumber} / 04
+                            </span>
+                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-[#C8102E]/20 text-rose-300 border border-[#C8102E]/30 font-semibold">
+                              {currentStage.stageTag}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-1.5">
+                            {VISUAL_STAGES.map((stage, idx) => (
+                              <button
+                                key={stage.id}
+                                onClick={() => setActiveStageIndex(idx)}
+                                className={cn(
+                                  "size-2 rounded-full transition-all cursor-pointer",
+                                  activeStageIndex === idx
+                                    ? "bg-[#C8102E] w-6"
+                                    : "bg-white/20 hover:bg-white/40"
+                                )}
+                                aria-label={`Jump to stage ${stage.stageNumber}`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Title */}
+                        <div className="py-4 text-left relative z-10">
+                          <h3 className="font-jakarta text-xl sm:text-2xl font-bold text-white tracking-tight">
+                            {currentStage.title}
+                          </h3>
+                        </div>
+
+                        {/* Animated Visual Viewport */}
+                        <div className="min-h-[290px] relative z-10 flex flex-col justify-center">
+                          <AnimatePresence mode="wait">
+                            <motion.div
+                              key={currentStage.id}
+                              initial={{ opacity: 0, y: 14, scale: 0.98 }}
+                              animate={{ opacity: 1, y: 0, scale: 1 }}
+                              exit={{ opacity: 0, y: -14, scale: 0.98 }}
+                              transition={{ duration: 0.35, ease: "easeOut" }}
+                            >
+                              {currentStage.render()}
+                            </motion.div>
+                          </AnimatePresence>
+                        </div>
+
+                        {/* Bottom Indicator */}
+                        <div className="pt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-neutral-400 relative z-10">
+                          <span className="flex items-center gap-1.5">
+                            <Clock className="size-3.5 text-neutral-500" />
+                            <span>{isAutoCycling ? "Auto-cycling live pipeline" : "Paused on hover"}</span>
+                          </span>
+                          <button
+                            onClick={() => setActiveStageIndex((prev) => (prev + 1) % VISUAL_STAGES.length)}
+                            className="text-rose-400 hover:text-white transition-colors cursor-pointer flex items-center gap-1 font-semibold"
+                          >
+                            <span>Next Stage</span>
+                            <ChevronRight className="size-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* RIGHT STAGE: 4 Synchronized Subsystem Controllers */}
+                    <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 text-left">
+                      {CAPABILITY_CARDS.slice(0, 4).map((card) => {
+                        const Icon = card.icon;
+                        const isSelected = VISUAL_STAGES[activeStageIndex]?.id === card.id;
+                        return (
+                          <div
+                            key={card.title}
+                            onClick={() => selectStageFromCapability(card.id)}
+                            className={cn(
+                              "p-5 rounded-2xl border transition-all flex flex-col justify-between space-y-4 shadow-xl group cursor-pointer",
+                              isSelected
+                                ? "bg-[#140D18] border-[#C8102E] ring-1 ring-[#C8102E]/40 scale-[1.01]"
+                                : "bg-[#0E121B] border-white/10 hover:border-white/20"
+                            )}
+                          >
+                            <div className="space-y-3">
+                              <div className="flex items-center justify-between">
+                                <div className={cn("size-9 rounded-xl flex items-center justify-center", card.iconBg)}>
+                                  <Icon className="size-4.5" />
+                                </div>
+                                <span className={cn("px-2 py-0.5 rounded-full text-[10px] font-mono border font-semibold", card.color)}>
+                                  {card.badge}
+                                </span>
+                              </div>
+                              <h4 className="font-jakarta text-base font-bold text-white tracking-tight">
+                                {card.title}
+                              </h4>
+                              <p className="font-sans text-xs text-neutral-400 leading-relaxed line-clamp-3">
+                                {card.desc}
+                              </p>
+                            </div>
+                            <div className="pt-2.5 border-t border-white/5 flex items-center justify-between text-xs font-mono text-neutral-400 group-hover:text-white">
+                              <span>{isSelected ? "Active Stage" : "Inspect Subsystem"}</span>
+                              <ArrowRight className="size-3.5 text-[#C8102E] transition-transform group-hover:translate-x-1" />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                )}
+
+                {activeTab === "capabilities" && (
+                  <motion.div
+                    key="capabilities-view"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -16 }}
+                    transition={{ duration: 0.3 }}
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 text-left"
+                  >
+                    {CAPABILITY_CARDS.map((card, idx) => {
+                      const Icon = card.icon;
+                      return (
+                        <motion.div
+                          key={card.title}
+                          initial={{ opacity: 0, y: 14 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: idx * 0.05 }}
+                          onClick={() => selectStageFromCapability(card.id)}
+                          className="p-6 rounded-3xl bg-[#0E121B] border border-white/10 hover:border-white/20 transition-all flex flex-col justify-between space-y-5 shadow-xl group hover:scale-[1.01] cursor-pointer"
+                        >
+                          <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                              <div className={cn("size-11 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-105", card.iconBg)}>
+                                <Icon className="size-5.5" />
+                              </div>
+                              <span className={cn("px-2.5 py-0.5 rounded-full text-[10px] font-mono border font-semibold", card.color)}>
+                                {card.badge}
+                              </span>
+                            </div>
+
+                            <div className="space-y-1.5">
+                              <h4 className="font-jakarta text-lg font-bold text-white tracking-tight">
+                                {card.title}
+                              </h4>
+                              <p className="font-sans text-xs text-neutral-400 leading-relaxed">
+                                {card.desc}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-neutral-400 group-hover:text-white transition-colors">
+                            <span>Launch Live Probe Simulator</span>
+                            <ArrowRight className="size-3.5 text-[#C8102E] transition-transform group-hover:translate-x-1" />
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          </div>
 
             {/* ── 4. The 4-Step Pipeline Architecture ── */}
             <div className="space-y-8 pt-8">
