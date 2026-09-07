@@ -3,24 +3,25 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { 
   Box, 
   Layers, 
   LayoutGrid, 
   FileText, 
-  Clock, 
   Tag, 
-  HelpCircle, 
   ArrowRight, 
   Menu, 
   X, 
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface NavbarProps {
   onOpenDemo?: () => void;
 }
 
 export function Navbar({ onOpenDemo }: NavbarProps) {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [footerVisible, setFooterVisible] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -49,12 +50,17 @@ export function Navbar({ onOpenDemo }: NavbarProps) {
   }, []);
 
   const navItems = [
-    { label: "Live Audit", icon: Box, href: "/#audit", highlight: true },
-    { label: "Bharat Index", icon: LayoutGrid, href: "/#bvi" },
+    { label: "Home", icon: Box, href: "/" },
+    { label: "Features", icon: Layers, href: "/features" },
+    { label: "How It Works", icon: LayoutGrid, href: "/#answer-room" },
     { label: "Pricing", icon: Tag, href: "/#pricing" },
-    { label: "FAQ", icon: HelpCircle, href: "/#faq" },
-    { label: "About", icon: FileText, href: "/about" },
+    { label: "Blog", icon: FileText, href: "/resources" },
   ];
+
+  const isItemActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname?.startsWith(href);
+  };
 
   return (
     <header 
@@ -83,7 +89,7 @@ export function Navbar({ onOpenDemo }: NavbarProps) {
 
         {/* Center: The Floating Pill Navigation (Matching height & exact rounded-full curve) */}
         <nav 
-          className={`hidden xl:flex items-center gap-2 h-[52px] px-4 py-2 rounded-full transition-all duration-300 ${
+          className={`hidden xl:flex items-center gap-1.5 h-[52px] px-3.5 py-2 rounded-full transition-all duration-300 ${
             scrolled
               ? "bg-white/95 backdrop-blur-xl shadow-[0_6px_28px_rgba(0,0,0,0.08)] border border-neutral-200/90"
               : "bg-white/90 backdrop-blur-md shadow-[0_3px_16px_rgba(0,0,0,0.05)] border border-neutral-200/75"
@@ -91,7 +97,9 @@ export function Navbar({ onOpenDemo }: NavbarProps) {
         >
           {navItems.map((item) => {
             const Icon = item.icon;
-            if (item.highlight) {
+            const active = isItemActive(item.href);
+
+            if (active) {
               return (
                 <Link
                   key={item.label}
@@ -103,6 +111,7 @@ export function Navbar({ onOpenDemo }: NavbarProps) {
                 </Link>
               );
             }
+
             return (
               <Link
                 key={item.label}
@@ -127,7 +136,7 @@ export function Navbar({ onOpenDemo }: NavbarProps) {
 
           <button
             onClick={() => onOpenDemo ? onOpenDemo() : window.location.href = "#audit"}
-            className="group inline-flex items-center justify-center gap-2 h-[52px] rounded-full bg-gradient-to-r from-[#C8102E] to-[#E02444] hover:from-[#B00D27] hover:to-[#C8102E] text-white px-6 py-2.5 text-sm font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md hover:shadow-red-950/10"
+            className="group inline-flex items-center justify-center gap-2 h-[52px] rounded-full bg-gradient-to-r from-[#C8102E] to-[#E02444] hover:from-[#B00D27] hover:to-[#C8102E] text-white px-6 py-2.5 text-sm font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md hover:shadow-red-950/10 cursor-pointer"
           >
             <span>Run Free Audit</span>
             <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -137,7 +146,7 @@ export function Navbar({ onOpenDemo }: NavbarProps) {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden size-[52px] rounded-full bg-white border border-neutral-200 text-neutral-900 shadow-xs flex items-center justify-center"
+            className="xl:hidden size-[52px] rounded-full bg-white border border-neutral-200 text-neutral-900 shadow-xs flex items-center justify-center cursor-pointer"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -152,14 +161,20 @@ export function Navbar({ onOpenDemo }: NavbarProps) {
           <div className="flex flex-col space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
+              const active = isItemActive(item.href);
               return (
                 <Link 
                   key={item.label}
                   href={item.href} 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-neutral-800 hover:bg-neutral-50 transition-colors"
+                  className={cn(
+                    "flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors",
+                    active
+                      ? "bg-neutral-900 text-white font-semibold"
+                      : "text-neutral-800 hover:bg-neutral-50"
+                  )}
                 >
-                  <Icon className="size-4 text-neutral-500" />
+                  <Icon className={cn("size-4", active ? "text-[#C8102E]" : "text-neutral-500")} />
                   <span>{item.label}</span>
                 </Link>
               );
@@ -172,7 +187,7 @@ export function Navbar({ onOpenDemo }: NavbarProps) {
                 setMobileMenuOpen(false);
                 onOpenDemo?.();
               }}
-              className="w-full py-2.5 rounded-full bg-[#C8102E] text-white text-sm font-semibold text-center shadow-sm hover:bg-[#B00D27] transition-colors flex items-center justify-center gap-2"
+              className="w-full py-2.5 rounded-full bg-[#C8102E] text-white text-sm font-semibold text-center shadow-sm hover:bg-[#B00D27] transition-colors flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Run Free Audit</span>
               <ArrowRight className="size-4" />
