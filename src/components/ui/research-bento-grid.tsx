@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { AnimatePresence, motion, useReducedMotion, useScroll, useMotionValueEvent } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   SiAnthropic,
   SiCloudflare,
@@ -239,7 +239,6 @@ interface DesignsPanelProps {
   title: React.ReactNode;
   description: React.ReactNode;
   onSelectedBrandChange?: (index: number) => void;
-  scrollActiveIndex?: number;
 }
 
 function DesignsPanel({
@@ -253,17 +252,11 @@ function DesignsPanel({
   title,
   description,
   onSelectedBrandChange,
-  scrollActiveIndex,
 }: DesignsPanelProps) {
   const [internalSelected, setInternalSelected] = React.useState(defaultSelectedBrand);
   const reduceMotion = useReducedMotion();
   const isControlled = selectedBrand !== undefined;
-  
-  // If scrollActiveIndex is passed, sync with scroll, else use controlled/internal
-  const selected = scrollActiveIndex !== undefined
-    ? Math.min(Math.max(scrollActiveIndex, 0), brands.length - 1)
-    : Math.min(Math.max(isControlled ? selectedBrand : internalSelected, 0), brands.length - 1);
-
+  const selected = Math.min(Math.max(isControlled ? selectedBrand : internalSelected, 0), brands.length - 1);
   const cursorStops = brands.map((_, index) => `${15 + (70 * index) / Math.max(brands.length - 1, 1)}%`);
 
   const selectBrand = React.useCallback(
@@ -273,6 +266,15 @@ function DesignsPanel({
     },
     [isControlled, onSelectedBrandChange],
   );
+
+  React.useEffect(() => {
+    if (!autoPlay || reduceMotion || brands.length < 2) return;
+    const interval = setInterval(() => {
+      const next = (selected + 1) % brands.length;
+      selectBrand(next);
+    }, rotationInterval);
+    return () => clearInterval(interval);
+  }, [autoPlay, brands.length, reduceMotion, rotationInterval, selectBrand, selected]);
 
   return (
     <Panel className="min-h-[350px] sm:min-h-[320px] @min-[840px]:col-span-12 @min-[840px]:min-h-[302px] @min-[840px]:row-span-1">
@@ -312,29 +314,35 @@ function DesignsPanel({
             aria-label={`Select ${brand.name}`}
             aria-pressed={selected === index}
             className={cn(
-              "relative flex aspect-square min-w-0 flex-1 items-center justify-center overflow-hidden rounded-[12px] border bg-[linear-gradient(145deg,#f2f2f0_0%,#e7e7e4_46%,#dcdcd8_100%)] shadow-[inset_0_1px_rgba(255,255,255,.9),0_12px_24px_rgba(24,24,27,.12)] sm:rounded-[14px] dark:bg-[linear-gradient(145deg,#161b26_0%,#10141f_48%,#0a0d14_100%)] dark:shadow-[inset_0_1px_rgba(255,255,255,.03),0_10px_22px_rgba(0,0,0,.32)] transition-all cursor-pointer",
+              "relative flex aspect-square min-w-0 flex-1 items-center justify-center overflow-hidden rounded-[12px] border bg-[linear-gradient(145deg,#f2f2f0_0%,#e7e7e4_46%,#dcdcd8_100%)] shadow-[inset_0_1px_rgba(255,255,255,.9),0_12px_24px_rgba(24,24,27,.12)] sm:rounded-[14px] dark:bg-[linear-gradient(145deg,#161b26_0%,#10141f_48%,#0a0d14_100%)] dark:shadow-[inset_0_1px_rgba(255,255,255,.03),0_10px_22px_rgba(0,0,0,.32)] transition-colors cursor-pointer",
               selected === index
-                ? "border-[#C8102E] text-rose-400 shadow-[inset_0_1px_rgba(255,255,255,.1),0_12px_28px_rgba(200,16,46,.25),0_0_24px_rgba(200,16,46,.35)] dark:border-[#C8102E] dark:text-rose-400 scale-[1.04]"
-                : "border-black/[0.11] text-zinc-700 hover:text-zinc-950 dark:border-white/[0.08] dark:text-[#a0a5b0] dark:hover:text-white opacity-60 hover:opacity-100",
+                ? "border-[#C8102E]/70 text-[#E02444] shadow-[inset_0_1px_rgba(255,255,255,.8),0_12px_28px_rgba(200,16,46,.18),0_0_22px_rgba(200,16,46,.25)] dark:border-[#C8102E]/80 dark:text-rose-400 dark:shadow-[inset_0_1px_rgba(255,255,255,.05),0_10px_24px_rgba(200,16,46,.3),0_0_20px_rgba(200,16,46,.25)]"
+                : "border-black/[0.11] text-zinc-700 hover:text-zinc-950 dark:border-white/[0.08] dark:text-[#a0a5b0] dark:hover:text-white",
             )}
-            animate={{
-              y: selected === index ? -4 : 0,
-              scale: selected === index ? 1.04 : 1,
-            }}
-            transition={spring}
+            animate={
+              reduceMotion
+                ? undefined
+                : {
+                    y: selected === index ? -3 : [0, index % 2 ? 1.5 : -1.5, 0],
+                    scale: selected === index ? 1.02 : 1,
+                  }
+            }
+            whileHover={{ y: -4, scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ y: { duration: 5 + index * 0.3, delay: index * 0.2, repeat: Infinity, ease: "easeInOut" }, scale: spring }}
           >
             {selected === index && (
               <motion.span
                 aria-hidden
-                className="absolute inset-[10%] rounded-full bg-[#C8102E]/30 blur-xl dark:bg-[#C8102E]/40"
+                className="absolute inset-[10%] rounded-full bg-[#C8102E]/25 blur-xl dark:bg-[#C8102E]/35"
                 initial={{ opacity: 0, scale: 0.7 }}
-                animate={{ opacity: [0.4, 0.8, 0.4], scale: [0.9, 1.1, 0.9] }}
+                animate={{ opacity: [0.35, 0.7, 0.35], scale: [0.9, 1.08, 0.9] }}
                 transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
               />
             )}
             <motion.span
               className="relative flex size-full items-center justify-center"
-              animate={{ scale: selected === index ? 1.1 : 1 }}
+              animate={{ scale: selected === index ? 1.08 : 1 }}
               transition={spring}
             >
               <BrandMark brand={brand} />
@@ -348,14 +356,9 @@ function DesignsPanel({
         className="left-[35%] top-[40%]"
         targetLeft={cursorStops[selected]}
         targetTop="40%"
-        delay={0.1}
+        delay={0.2}
       />
-      <ArrowCursor
-        label={collaboratorLabel}
-        inverted
-        className="left-[58%] top-[54%] sm:left-[62%] sm:top-[56%]"
-        delay={0.4}
-      />
+      <ArrowCursor label={collaboratorLabel} inverted className="left-[58%] top-[54%] sm:left-[62%] sm:top-[56%]" delay={0.9} />
 
       <FeatureCopy title={title}>{description}</FeatureCopy>
     </Panel>
@@ -370,31 +373,28 @@ interface InvoicePanelProps {
   autoPlay: boolean;
   title: React.ReactNode;
   description: React.ReactNode;
-  scrollProgress?: number;
 }
 
-function InvoicePanel({
-  monthlyPrice,
-  previousPrice,
-  currency,
-  locale,
-  autoPlay,
-  title,
-  description,
-  scrollProgress = 0,
-}: InvoicePanelProps) {
+function InvoicePanel({ monthlyPrice, previousPrice, currency, locale, autoPlay, title, description }: InvoicePanelProps) {
   const reduceMotion = useReducedMotion();
+  const [invoiceIndex, setInvoiceIndex] = React.useState(0);
   const formatPrice = React.useMemo(
     () => new Intl.NumberFormat(locale, { style: "currency", currency, maximumFractionDigits: 0 }),
     [currency, locale],
   );
-
-  // Sync invoice card toggle with scroll progress
-  const invoiceIndex = scrollProgress > 0.45 ? 1 : 0;
   const invoices = [
     { label: "Legacy PR & Manual Agency", price: previousPrice, previousPrice: null, accent: false },
     { label: "AIVI Autonomous GEO Engine", price: monthlyPrice, previousPrice, accent: true },
   ];
+
+  React.useEffect(() => {
+    if (!autoPlay || reduceMotion) return;
+    const interval = setInterval(() => {
+      setInvoiceIndex((current) => (current + 1) % invoices.length);
+    }, 3900);
+    return () => clearInterval(interval);
+  }, [autoPlay, invoices.length, reduceMotion]);
+
   const invoice = invoices[invoiceIndex];
 
   return (
@@ -408,10 +408,10 @@ function InvoicePanel({
           <motion.div
             key={invoiceIndex}
             className="absolute left-[21%] top-5 h-[225px] w-[58%] overflow-hidden rounded-[14px] border border-black/[0.16] bg-[linear-gradient(145deg,#f5f5f2_0%,#eaeae6_46%,#dededa_100%)] p-3.5 shadow-[inset_0_1px_rgba(255,255,255,.9),0_18px_42px_rgba(24,24,27,.14),0_3px_8px_rgba(24,24,27,.08)] sm:left-auto sm:right-4 sm:h-[250px] sm:w-[89%] dark:border-[#2b3345] dark:bg-[linear-gradient(145deg,#151a27_0%,#0f131d_48%,#0a0d14_100%)] dark:shadow-[inset_0_1px_rgba(255,255,255,.03),0_16px_36px_rgba(0,0,0,.45),0_3px_8px_rgba(0,0,0,.25)] @min-[520px]:right-7 @min-[520px]:p-5"
-            initial={reduceMotion ? false : { y: 220, opacity: 0, rotate: -1.25 }}
+            initial={reduceMotion ? false : { y: 270, opacity: 0, rotate: -1.25 }}
             animate={{ y: 0, opacity: 1, rotate: 0 }}
-            exit={reduceMotion ? { opacity: 0 } : { y: 240, opacity: 0, rotate: 1.1 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            exit={reduceMotion ? { opacity: 0 } : { y: 285, opacity: 0, rotate: 1.1 }}
+            transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="flex items-start justify-between text-zinc-500 dark:text-[#a0a5b2]">
               <span className="text-[11px] font-mono font-medium truncate pr-2">{invoice.label}</span>
@@ -444,7 +444,7 @@ function InvoicePanel({
                   <motion.span
                     className={cn(
                       "h-2.5 rounded-[3px]",
-                      invoice.accent ? "bg-[#C8102E]/30 dark:bg-[#C8102E]/40" : "bg-black/[0.055] dark:bg-white/[0.045]",
+                      invoice.accent ? "bg-[#C8102E]/25 dark:bg-[#C8102E]/35" : "bg-black/[0.055] dark:bg-white/[0.045]",
                     )}
                     style={{ width: `${width}%` }}
                     animate={reduceMotion ? undefined : { opacity: [0.35, 0.7, 0.35] }}
@@ -490,7 +490,6 @@ interface PausePanelProps {
   activeDescription: React.ReactNode;
   pausedDescription: React.ReactNode;
   onPausedChange?: (paused: boolean) => void;
-  scrollProgress?: number;
 }
 
 function PausePanel({
@@ -503,13 +502,32 @@ function PausePanel({
   activeDescription,
   pausedDescription,
   onPausedChange,
-  scrollProgress = 0,
 }: PausePanelProps) {
   const [internalPaused, setInternalPaused] = React.useState(defaultPaused);
+  const [demoLit, setDemoLit] = React.useState(true);
   const reduceMotion = useReducedMotion();
   const isControlled = controlledPaused !== undefined;
   const paused = isControlled ? controlledPaused : internalPaused;
-  const arrowLit = scrollProgress > 0.7;
+  const arrowLit = autoPlay && demoLit && !reduceMotion;
+
+  React.useEffect(() => {
+    if (!autoPlay || reduceMotion) return;
+
+    let offTimer: ReturnType<typeof setTimeout> | undefined;
+    const illuminate = () => {
+      setDemoLit(true);
+      offTimer = setTimeout(() => setDemoLit(false), 1500);
+    };
+
+    const firstTimer = setTimeout(() => setDemoLit(false), 1500);
+    const loopTimer = setInterval(illuminate, spotlightInterval);
+
+    return () => {
+      clearTimeout(firstTimer);
+      if (offTimer) clearTimeout(offTimer);
+      clearInterval(loopTimer);
+    };
+  }, [autoPlay, reduceMotion, spotlightInterval]);
 
   const toggle = () => {
     const next = !paused;
@@ -550,7 +568,7 @@ function PausePanel({
           whileHover={{ scale: 1.025 }}
           whileTap={{ scale: 0.97 }}
           transition={spring}
-          animate={{ scale: arrowLit ? 1.015 : 1 }}
+          animate={{ scale: arrowLit ? 1.012 : 1 }}
           className={cn(
             "relative z-10 flex h-[76px] min-w-[174px] items-center justify-center overflow-hidden rounded-[20px] border px-8 text-[26px] font-bold tracking-[-0.045em] transition-[border-color,color,box-shadow] duration-500 font-jakarta cursor-pointer",
             arrowLit
@@ -563,11 +581,11 @@ function PausePanel({
             aria-hidden
             className="absolute inset-0 bg-gradient-to-r from-[#C8102E] to-[#E02444]"
             animate={{ opacity: arrowLit ? 1 : 0 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
+            transition={{ duration: arrowLit ? 0.64 : 0.76, ease: arrowLit ? [0.16, 1, 0.3, 1] : [0.22, 1, 0.36, 1] }}
           />
           <span className="relative z-10">{paused ? "Resume Probes" : "Pause Probes"}</span>
         </motion.button>
-        <ArrowCursor label={userLabel} className="left-[57%] top-[70%]" delay={0.3} active={arrowLit} />
+        <ArrowCursor label={userLabel} className="left-[57%] top-[70%]" delay={0.5} active={arrowLit} />
       </div>
 
       <FeatureCopy title={title}>{paused ? pausedDescription : activeDescription}</FeatureCopy>
@@ -587,8 +605,8 @@ export function ResearchBentoGrid({
   brands = DEFAULT_BRANDS,
   copy,
   autoPlay = true,
-  brandRotationInterval = 2600,
-  spotlightInterval = 4400,
+  brandRotationInterval = 5500,
+  spotlightInterval = 6500,
   userLabel = "You",
   collaboratorLabel = "AIVI Bot",
   className,
@@ -597,23 +615,6 @@ export function ResearchBentoGrid({
   ...props
 }: ResearchBentoGridProps) {
   const content = { ...DEFAULT_COPY, ...copy };
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const [scrollBrandIndex, setScrollBrandIndex] = React.useState(defaultSelectedBrand);
-  const [scrollProgress, setScrollProgress] = React.useState(0);
-
-  // Bind to page scroll progress over the ResearchBentoGrid container
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  });
-
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    setScrollProgress(latest);
-    // Map scroll progress from 0.2 to 0.75 across the 5 brands
-    const progress = Math.max(0, Math.min(1, (latest - 0.2) / 0.55));
-    const targetIdx = Math.min(brands.length - 1, Math.floor(progress * brands.length));
-    setScrollBrandIndex(targetIdx);
-  });
 
   if (brands.length === 0) {
     throw new Error("ResearchBentoGrid requires at least one brand.");
@@ -621,15 +622,14 @@ export function ResearchBentoGrid({
 
   return (
     <div
-      ref={containerRef}
       {...props}
       className={cn(
-        "flex w-full overflow-visible bg-transparent p-1 text-zinc-950 [--bento-tile-cutout:#e4e4e1] [container-type:inline-size]",
+        "flex h-full w-full overflow-hidden bg-transparent p-2 text-zinc-950 [--bento-tile-cutout:#e4e4e1] [container-type:inline-size] sm:p-3",
         "dark:bg-transparent dark:text-white dark:[--bento-tile-cutout:#171717]",
         className,
       )}
     >
-      <div className="m-auto grid w-full max-w-[1160px] grid-cols-1 gap-3 sm:gap-4 @min-[840px]:grid-cols-12 @min-[840px]:grid-rows-2">
+      <div className="m-auto grid w-full max-w-[1160px] grid-cols-1 gap-3 sm:gap-4 @min-[840px]:h-[min(100%,660px)] @min-[840px]:grid-cols-12 @min-[840px]:grid-rows-2">
         <DesignsPanel
           brands={brands}
           selectedBrand={selectedBrand}
@@ -641,7 +641,6 @@ export function ResearchBentoGrid({
           title={content.showcaseTitle}
           description={content.showcaseDescription}
           onSelectedBrandChange={onSelectedBrandChange}
-          scrollActiveIndex={scrollBrandIndex}
         />
         <InvoicePanel
           monthlyPrice={monthlyPrice}
@@ -651,7 +650,6 @@ export function ResearchBentoGrid({
           autoPlay={autoPlay}
           title={content.pricingTitle}
           description={content.pricingDescription}
-          scrollProgress={scrollProgress}
         />
         <PausePanel
           paused={paused}
@@ -663,7 +661,6 @@ export function ResearchBentoGrid({
           activeDescription={content.activeDescription}
           pausedDescription={content.pausedDescription}
           onPausedChange={onPausedChange}
-          scrollProgress={scrollProgress}
         />
       </div>
     </div>
