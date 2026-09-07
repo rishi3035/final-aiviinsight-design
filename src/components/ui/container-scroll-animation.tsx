@@ -27,83 +27,54 @@ export const ContainerScroll = ({
     };
   }, []);
 
-  // Display tilts smoothly from angled back to upright on scroll
-  const macRotate = useTransform(scrollYProgress, [0, 0.45], [18, 0]);
-  const contentOpacity = useTransform(scrollYProgress, [0.05, 0.45], [0.3, 1]);
-  const macScale = useTransform(
-    scrollYProgress,
-    [0, 0.45],
-    isMobile ? [0.88, 1] : [0.94, 1]
-  );
-  const titleTranslate = useTransform(scrollYProgress, [0, 0.45], [0, -25]);
+  const scaleDimensions = () => {
+    return isMobile ? [0.85, 0.98] : [1.02, 1];
+  };
+
+  const rotate = useTransform(scrollYProgress, [0, 0.45], [18, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.45], scaleDimensions());
+  const translate = useTransform(scrollYProgress, [0, 0.45], [0, -30]);
 
   return (
     <div
-      className="min-h-[52rem] md:min-h-[66rem] flex items-center justify-center relative p-2 md:p-8"
+      className="min-h-[50rem] md:min-h-[64rem] flex items-center justify-center relative p-2 md:p-12"
       ref={containerRef}
     >
       <div
-        className="py-6 md:py-12 w-full relative"
-        style={{ perspective: "1400px" }}
+        className="py-8 md:py-16 w-full relative"
+        style={{
+          perspective: "1200px",
+        }}
       >
-        {/* Title header */}
+        {/* Title Header */}
         <motion.div
-          style={{ translateY: titleTranslate }}
+          style={{
+            translateY: translate,
+          }}
           className="max-w-5xl mx-auto text-center mb-8 sm:mb-12"
         >
           {titleComponent}
         </motion.div>
 
-        {/* Mac Desktop hardware enclosure */}
+        {/* iPad / Tablet Hardware Enclosure */}
         <motion.div
           style={{
-            rotateX: macRotate,
-            scale: macScale,
-            transformOrigin: "bottom center",
+            rotateX: rotate,
+            scale,
             transformStyle: "preserve-3d",
+            boxShadow:
+              "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003",
           }}
-          className="max-w-6xl mx-auto w-full relative select-none"
+          className="max-w-5xl -mt-6 sm:-mt-10 mx-auto w-full border-[6px] sm:border-[8px] md:border-[10px] border-[#3F3F46] p-1.5 sm:p-3 md:p-4 bg-[#18181B] rounded-[28px] sm:rounded-[36px] md:rounded-[40px] shadow-2xl relative select-none ring-1 ring-white/10"
         >
-          {/* ── Display Housing (Bezel, Screen, Chin) ── */}
-          <div className="relative w-full rounded-[18px] sm:rounded-[24px] overflow-hidden border-[10px] sm:border-[14px] md:border-[16px] border-[#eeeeef] ring-1 ring-neutral-300 bg-[#0B0E14] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.5),0_10px_25px_rgba(0,0,0,0.2)]">
-            
-            {/* Top Center Camera */}
-            <div className="absolute top-1.5 left-1/2 -translate-x-1/2 flex items-center justify-center size-2.5 sm:size-3 rounded-full bg-[#414042] z-30 shadow-inner">
-              <span className="size-1 sm:size-1.5 rounded-full bg-[#262262]" />
-            </div>
-
-            {/* Inner Active Screen Area (houses children) */}
-            <div className="w-full overflow-hidden bg-[#0B0E14] text-white">
-              <motion.div
-                style={{ opacity: contentOpacity }}
-                className="w-full h-full"
-              >
-                {children}
-              </motion.div>
-            </div>
-
-            {/* Bottom Metallic Chin Bar */}
-            <div className="h-8 sm:h-12 md:h-14 w-full bg-[#d9d9db] border-t border-[#c7c8cb] flex items-center justify-center relative shadow-inner">
-              {/* Subtle Apple Metallic Reflection Accent */}
-              <div className="w-4 sm:w-5 h-4 sm:h-5 rounded-full bg-[#c0c1c4] opacity-40 blur-[0.5px]" />
-            </div>
+          {/* Top Camera Dot on Bezel */}
+          <div className="absolute top-2 sm:top-2.5 left-1/2 -translate-x-1/2 size-2 sm:size-2.5 rounded-full bg-[#27272A] border border-white/10 flex items-center justify-center z-20">
+            <span className="size-1 rounded-full bg-[#18181B]" />
           </div>
 
-          {/* ── Desktop Stand Neck & Foot Base ── */}
-          <div className="relative flex flex-col items-center -mt-0.5 pointer-events-none">
-            {/* Stand Neck */}
-            <div className="w-28 sm:w-36 md:w-44 h-14 sm:h-18 md:h-22 bg-gradient-to-b from-[#a7a9ac] via-[#d1d3d4] to-[#e6e7e8] shadow-inner border-x border-[#c2c4c7]" />
-            
-            {/* Stand Foot Base */}
-            <div className="relative w-36 sm:w-48 md:w-56 h-2.5 sm:h-3 bg-[#dedfe1] rounded-b-lg border-t border-[#c5c6c9] shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-between px-3">
-              {/* Left Rubber Foot Pad */}
-              <div className="w-3.5 sm:w-5 h-0.5 bg-[#dedfe2] rounded-xs" />
-              {/* Right Rubber Foot Pad */}
-              <div className="w-3.5 sm:w-5 h-0.5 bg-[#dedfe2] rounded-xs" />
-            </div>
-
-            {/* Desk Shadow */}
-            <div className="w-56 sm:w-72 md:w-96 h-3 bg-black/20 rounded-full blur-md -mt-1" />
+          {/* Inner iPad Active Screen */}
+          <div className="h-full w-full overflow-hidden rounded-[20px] sm:rounded-[26px] md:rounded-[28px] bg-[#131314] shadow-inner border border-white/5">
+            {children}
           </div>
         </motion.div>
       </div>
