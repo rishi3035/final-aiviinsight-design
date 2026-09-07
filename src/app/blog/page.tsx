@@ -14,6 +14,7 @@ import {
   FileCode,
   Terminal,
   Network,
+  CheckCircle2,
 } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -119,11 +120,12 @@ export default function BlogPage() {
               </motion.p>
             </div>
 
-            {/* ── 2. Creative MagicUI Bento Grid with Rich Live Data Visuals ── */}
-            <BentoGrid className="auto-rows-[25rem] sm:auto-rows-[26rem] md:grid-cols-3 gap-6">
+            {/* ── 2. Clean Bento Grid (No Text Overlap, Split & Stacked Stages) ── */}
+            <BentoGrid className="grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               
-              {/* ═══ BOX 1: Master Blueprint (Col-Span 2) ═══ */}
+              {/* ═══ BOX 1: Master Blueprint (Col-Span 2, Split Layout) ═══ */}
               <BentoCard
+                layout="split"
                 name="Generative Engine Optimization in 2026: The Comprehensive Enterprise Blueprint"
                 description="A complete technical deep-dive into how multi-hop RAG pipelines, knowledge graph citations, and brand co-citations determine recommendation probability inside frontier search engines."
                 Icon={TrendingUp}
@@ -132,45 +134,48 @@ export default function BlogPage() {
                 meta="8 min read • Sep 2026"
                 cta="Read Master Blueprint"
                 onCtaClick={() => handleOpenDemo("GEO Blueprint Research")}
-                className="col-span-3 lg:col-span-2"
-                background={
-                  <div className="absolute inset-0 p-6 opacity-35 group-hover:opacity-75 transition-opacity duration-500">
-                    <div className="absolute top-0 right-0 w-80 h-80 bg-[#C8102E]/25 rounded-full blur-3xl pointer-events-none" />
-                    
-                    <div className="max-w-md ml-auto space-y-2.5 font-mono text-[11px]">
-                      <div className="p-3 rounded-xl bg-[#07090F]/90 border border-white/10 space-y-1.5 backdrop-blur-sm">
-                        <div className="flex items-center justify-between text-neutral-400">
+                className="col-span-1 md:col-span-2 lg:col-span-2"
+                visual={
+                  <div className="space-y-3 font-mono text-[11px]">
+                    <div className="flex items-center justify-between pb-2 border-b border-white/10 text-neutral-400">
+                      <span className="text-[10px] font-bold text-rose-300 tracking-wider uppercase">Live Probe Consensus</span>
+                      <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 text-[10px] font-semibold border border-emerald-500/20">99.4% Avg</span>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="p-2.5 rounded-xl bg-black/40 border border-white/5 space-y-1.5">
+                        <div className="flex items-center justify-between text-neutral-300 text-xs">
                           <span className="flex items-center gap-1.5">
                             <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
-                            <span>ChatGPT 4o Search Probes</span>
+                            <span>ChatGPT 4o Search</span>
                           </span>
-                          <span className="text-emerald-400 font-bold">99.4% Grounded</span>
+                          <span className="text-emerald-400 font-bold">99.4%</span>
                         </div>
                         <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
                           <div className="h-full bg-emerald-400 rounded-full w-[99.4%]" />
                         </div>
                       </div>
 
-                      <div className="p-3 rounded-xl bg-[#07090F]/90 border border-white/10 space-y-1.5 backdrop-blur-sm">
-                        <div className="flex items-center justify-between text-neutral-400">
+                      <div className="p-2.5 rounded-xl bg-black/40 border border-white/5 space-y-1.5">
+                        <div className="flex items-center justify-between text-neutral-300 text-xs">
                           <span className="flex items-center gap-1.5">
                             <span className="size-2 rounded-full bg-rose-400" />
-                            <span>Perplexity Pro Multi-Hop RAG</span>
+                            <span>Perplexity Pro Multi-Hop</span>
                           </span>
-                          <span className="text-rose-400 font-bold">98.6% Grounded</span>
+                          <span className="text-rose-400 font-bold">98.6%</span>
                         </div>
                         <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
                           <div className="h-full bg-[#C8102E] rounded-full w-[98.6%]" />
                         </div>
                       </div>
 
-                      <div className="p-3 rounded-xl bg-[#07090F]/90 border border-white/10 space-y-1.5 backdrop-blur-sm">
-                        <div className="flex items-center justify-between text-neutral-400">
+                      <div className="p-2.5 rounded-xl bg-black/40 border border-white/5 space-y-1.5">
+                        <div className="flex items-center justify-between text-neutral-300 text-xs">
                           <span className="flex items-center gap-1.5">
                             <span className="size-2 rounded-full bg-blue-400" />
-                            <span>Claude 3.7 Reasoning Graph</span>
+                            <span>Claude 3.7 Reasoning</span>
                           </span>
-                          <span className="text-blue-400 font-bold">97.8% Grounded</span>
+                          <span className="text-blue-400 font-bold">97.8%</span>
                         </div>
                         <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
                           <div className="h-full bg-blue-400 rounded-full w-[97.8%]" />
@@ -183,31 +188,29 @@ export default function BlogPage() {
 
               {/* ═══ BOX 2: Sovereign Bharat Index (BVI) (Col-Span 1) ═══ */}
               <BentoCard
+                layout="stacked"
                 name="Why 70% of Indian AI Searches Are Displacing English-Only SaaS Brands"
-                description="How conversational Hinglish and Devanagari prompts trigger alternative retrieval indices in Sarvam, Claude, and GPT-4o — causing English-dominant brands to lose market share."
+                description="How conversational Hinglish and Devanagari prompts trigger alternative retrieval indices in Sarvam, Claude, and GPT-4o."
                 Icon={Languages}
                 badge="Bharat Index (BVI)"
                 badgeColor="bg-purple-500/20 text-[#D1B3FF] border-purple-500/30"
                 meta="6 min read • Sep 2026"
                 cta="Explore BVI Study"
                 onCtaClick={() => handleOpenDemo("Bharat Index Study")}
-                className="col-span-3 lg:col-span-1"
-                background={
-                  <div className="absolute inset-0 p-6 opacity-35 group-hover:opacity-75 transition-opacity duration-500">
-                    <div className="absolute top-0 right-0 w-60 h-60 bg-purple-500/20 rounded-full blur-3xl" />
-                    <div className="space-y-2 font-mono text-[11px]">
-                      <div className="p-3 rounded-xl bg-[#07090F]/90 border border-purple-500/30 backdrop-blur-sm space-y-1">
-                        <div className="text-[#D1B3FF] text-[10px] font-bold"># Regional Prompt Vector</div>
-                        <div className="text-white text-xs truncate">&ldquo;Kaunsa billing software sabse reliable hai?&rdquo;</div>
-                      </div>
-                      <div className="p-2.5 rounded-xl bg-purple-950/40 border border-purple-500/20 flex items-center justify-between text-xs">
-                        <span className="text-neutral-300">Sarvam Match</span>
-                        <span className="font-bold text-[#D1B3FF]">Tier-1 Lead</span>
-                      </div>
-                      <div className="p-2.5 rounded-xl bg-black/50 border border-white/10 flex items-center justify-between text-xs">
-                        <span className="text-neutral-400">English Fallback</span>
-                        <span className="font-bold text-rose-400">0% Displaced</span>
-                      </div>
+                className="col-span-1"
+                visual={
+                  <div className="space-y-2.5 font-mono text-[11px]">
+                    <div className="p-2.5 rounded-xl bg-purple-950/30 border border-purple-500/30 space-y-1">
+                      <div className="text-purple-300 text-[10px] font-bold"># Regional Prompt Vector</div>
+                      <div className="text-white text-xs truncate">&ldquo;Kaunsa billing software sabse reliable hai?&rdquo;</div>
+                    </div>
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-black/40 border border-white/5 text-xs">
+                      <span className="text-neutral-300">Sarvam Indic LLM</span>
+                      <span className="font-bold text-purple-300">Tier-1 Citation</span>
+                    </div>
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-black/40 border border-white/5 text-xs">
+                      <span className="text-neutral-400">English Fallback</span>
+                      <span className="font-bold text-rose-400">0% Displaced</span>
                     </div>
                   </div>
                 }
@@ -215,32 +218,32 @@ export default function BlogPage() {
 
               {/* ═══ BOX 3: Autonomous llms.txt Standard (Col-Span 1) ═══ */}
               <BentoCard
+                layout="stacked"
                 name="The Autonomous llms.txt Standard: Structuring Directives for GPTBot & ClaudeBot"
-                description="Architectural guidelines for serving token-optimized llms.txt files that guide AI crawlers directly to canonical enterprise facts, API docs, and benchmarks."
+                description="Architectural guidelines for serving token-optimized llms.txt files that guide AI crawlers directly to canonical enterprise facts and benchmarks."
                 Icon={FileCode}
                 badge="DAST & llms.txt"
                 badgeColor="bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
                 meta="7 min read • Aug 2026"
                 cta="Inspect llms.txt Guide"
                 onCtaClick={() => handleOpenDemo("llms.txt Architecture")}
-                className="col-span-3 lg:col-span-1"
-                background={
-                  <div className="absolute inset-0 p-5 opacity-35 group-hover:opacity-75 transition-opacity duration-500">
-                    <div className="p-3.5 rounded-xl bg-[#07090F] border border-emerald-500/30 font-mono text-[10.5px] space-y-1.5 backdrop-blur-sm">
-                      <div className="flex items-center justify-between border-b border-white/10 pb-1 text-neutral-400">
-                        <span className="text-emerald-400 font-bold">/llms.txt</span>
-                        <span className="text-emerald-400">200 OK</span>
-                      </div>
-                      <div className="text-neutral-400">&gt; User-agent: GPTBot, ClaudeBot</div>
-                      <div className="text-neutral-400">&gt; Allow: /api, /benchmarks</div>
-                      <div className="text-emerald-300 font-semibold">&gt; Authority: 100% Verified</div>
+                className="col-span-1"
+                visual={
+                  <div className="p-3 rounded-xl bg-black/50 border border-emerald-500/20 font-mono text-[10.5px] space-y-1.5">
+                    <div className="flex items-center justify-between border-b border-white/10 pb-1 text-neutral-400">
+                      <span className="text-emerald-400 font-bold">/llms.txt</span>
+                      <span className="text-emerald-400">200 OK</span>
                     </div>
+                    <div className="text-neutral-400">&gt; User-agent: GPTBot, ClaudeBot</div>
+                    <div className="text-neutral-400">&gt; Allow: /api, /benchmarks</div>
+                    <div className="text-emerald-300 font-semibold pt-1">&gt; Authority: 100% Verified</div>
                   </div>
                 }
               />
 
-              {/* ═══ BOX 4: Reverse-Engineering Perplexity Pro (Col-Span 2) ═══ */}
+              {/* ═══ BOX 4: Reverse-Engineering Perplexity Pro (Col-Span 2, Split Layout) ═══ */}
               <BentoCard
+                layout="split"
                 name="Reverse-Engineering Perplexity Pro: How Primary Domain Weights Win Citations"
                 description="Empirical analysis of 50,000 Perplexity Pro responses showing why direct technical documentation carries 48% citation weight over secondary forum listicles and SEO blogs."
                 Icon={Bot}
@@ -249,22 +252,24 @@ export default function BlogPage() {
                 meta="5 min read • Aug 2026"
                 cta="Read Perplexity Lab Report"
                 onCtaClick={() => handleOpenDemo("Perplexity Lab Report")}
-                className="col-span-3 lg:col-span-2"
-                background={
-                  <div className="absolute inset-0 p-6 opacity-35 group-hover:opacity-75 transition-opacity duration-500">
-                    <div className="absolute top-0 right-0 w-72 h-72 bg-[#C8102E]/15 rounded-full blur-3xl" />
-                    <div className="max-w-md ml-auto grid grid-cols-3 gap-2 font-mono text-center">
-                      <div className="p-3 rounded-xl bg-[#07090F]/90 border border-white/10 backdrop-blur-sm space-y-1">
-                        <div className="text-2xl font-bold text-emerald-400">48%</div>
+                className="col-span-1 md:col-span-2 lg:col-span-2"
+                visual={
+                  <div className="space-y-3 font-mono">
+                    <div className="text-[10px] font-bold text-rose-300 uppercase tracking-wider pb-1 border-b border-white/10">
+                      Citation Weight Breakdown
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-center">
+                      <div className="p-3 rounded-xl bg-black/40 border border-emerald-500/20 space-y-1">
+                        <div className="text-xl sm:text-2xl font-bold text-emerald-400">48%</div>
                         <div className="text-[10px] text-neutral-400 font-sans">Primary Docs</div>
                       </div>
-                      <div className="p-3 rounded-xl bg-[#07090F]/90 border border-white/10 backdrop-blur-sm space-y-1">
-                        <div className="text-2xl font-bold text-[#C8102E]">32%</div>
-                        <div className="text-[10px] text-neutral-400 font-sans">Knowledge Graph</div>
+                      <div className="p-3 rounded-xl bg-black/40 border border-[#C8102E]/30 space-y-1">
+                        <div className="text-xl sm:text-2xl font-bold text-rose-400">32%</div>
+                        <div className="text-[10px] text-neutral-400 font-sans">JSON-LD Schema</div>
                       </div>
-                      <div className="p-3 rounded-xl bg-[#07090F]/90 border border-white/10 backdrop-blur-sm space-y-1">
-                        <div className="text-2xl font-bold text-neutral-400">20%</div>
-                        <div className="text-[10px] text-neutral-400 font-sans">Forum Mentions</div>
+                      <div className="p-3 rounded-xl bg-black/40 border border-white/10 space-y-1">
+                        <div className="text-xl sm:text-2xl font-bold text-neutral-400">20%</div>
+                        <div className="text-[10px] text-neutral-400 font-sans">Forums / Social</div>
                       </div>
                     </div>
                   </div>
@@ -273,6 +278,7 @@ export default function BlogPage() {
 
               {/* ═══ BOX 5: DAST Security Audits & Zero-Trust (Col-Span 1) ═══ */}
               <BentoCard
+                layout="stacked"
                 name="DAST Security Audits: Preventing TLS and CSP Hallucination Vulnerabilities"
                 description="When enterprise websites block crawler IPs or fail CSP handshake policies, LLMs hallucinate fallback data. Continuous DAST scanning eliminates citation voids."
                 Icon={ShieldCheck}
@@ -281,17 +287,23 @@ export default function BlogPage() {
                 meta="6 min read • Aug 2026"
                 cta="View Security Report"
                 onCtaClick={() => handleOpenDemo("Security & DAST Audit")}
-                className="col-span-3 lg:col-span-1"
-                background={
-                  <div className="absolute inset-0 p-5 opacity-35 group-hover:opacity-75 transition-opacity duration-500">
-                    <div className="p-3 rounded-xl bg-[#07090F] border border-cyan-500/30 font-mono text-[10.5px] space-y-1.5 backdrop-blur-sm">
-                      <div className="flex items-center justify-between text-cyan-400 font-bold border-b border-white/10 pb-1">
-                        <span>DAST Scanner v4.2</span>
-                        <span>PASS</span>
-                      </div>
-                      <div className="text-neutral-300">✓ TLS 1.3 Strict Mode</div>
-                      <div className="text-neutral-300">✓ CSP Header Directives</div>
-                      <div className="text-emerald-400 font-bold">✓ 200+ Audits Passed</div>
+                className="col-span-1"
+                visual={
+                  <div className="p-3 rounded-xl bg-black/50 border border-cyan-500/20 font-mono text-[10.5px] space-y-1.5">
+                    <div className="flex items-center justify-between text-cyan-400 font-bold border-b border-white/10 pb-1">
+                      <span>DAST Engine v4.2</span>
+                      <span className="text-emerald-400 font-bold">ALL PASS</span>
+                    </div>
+                    <div className="text-neutral-300 flex items-center gap-1.5 pt-0.5">
+                      <CheckCircle2 className="size-3 text-emerald-400" />
+                      <span>TLS 1.3 Strict Mode</span>
+                    </div>
+                    <div className="text-neutral-300 flex items-center gap-1.5">
+                      <CheckCircle2 className="size-3 text-emerald-400" />
+                      <span>CSP Crawler Directives</span>
+                    </div>
+                    <div className="text-emerald-400 font-bold text-[10px] pt-0.5">
+                      ✓ Zero Injection Vulnerabilities
                     </div>
                   </div>
                 }
@@ -299,6 +311,7 @@ export default function BlogPage() {
 
               {/* ═══ BOX 6: Q3 2026 Multi-Model Perception Benchmark (Col-Span 1) ═══ */}
               <BentoCard
+                layout="stacked"
                 name="Q3 2026 Perception Benchmark: GPT-4o vs Claude 3.7 vs Gemini 3.5"
                 description="Benchmarking citation stability, domain grounding ratios, and hallucination frequencies across 1,000 Global 2000 brand queries."
                 Icon={Zap}
@@ -307,22 +320,20 @@ export default function BlogPage() {
                 meta="9 min read • Jul 2026"
                 cta="Read Benchmark Study"
                 onCtaClick={() => handleOpenDemo("Benchmark Study")}
-                className="col-span-3 lg:col-span-1"
-                background={
-                  <div className="absolute inset-0 p-5 opacity-35 group-hover:opacity-75 transition-opacity duration-500">
-                    <div className="p-3 rounded-xl bg-[#07090F] border border-blue-500/30 font-mono text-[10.5px] space-y-2 backdrop-blur-sm">
-                      <div className="flex items-center justify-between text-neutral-400">
-                        <span className="text-white font-bold">GPT-4o Search</span>
-                        <span className="text-emerald-400">99.4%</span>
-                      </div>
-                      <div className="flex items-center justify-between text-neutral-400">
-                        <span className="text-white font-bold">Claude 3.7 Sonnet</span>
-                        <span className="text-blue-400">98.2%</span>
-                      </div>
-                      <div className="flex items-center justify-between text-neutral-400">
-                        <span className="text-white font-bold">Gemini 3.5 Flash</span>
-                        <span className="text-purple-400">96.8%</span>
-                      </div>
+                className="col-span-1"
+                visual={
+                  <div className="p-3 rounded-xl bg-black/50 border border-blue-500/20 font-mono text-[10.5px] space-y-2">
+                    <div className="flex items-center justify-between text-neutral-400">
+                      <span className="text-white font-bold">GPT-4o Search</span>
+                      <span className="text-emerald-400 font-bold">99.4%</span>
+                    </div>
+                    <div className="flex items-center justify-between text-neutral-400">
+                      <span className="text-white font-bold">Claude 3.7 Sonnet</span>
+                      <span className="text-blue-400 font-bold">98.2%</span>
+                    </div>
+                    <div className="flex items-center justify-between text-neutral-400">
+                      <span className="text-white font-bold">Gemini 3.5 Pro</span>
+                      <span className="text-purple-400 font-bold">96.8%</span>
                     </div>
                   </div>
                 }
@@ -330,6 +341,7 @@ export default function BlogPage() {
 
               {/* ═══ BOX 7: Deterministic Cursor AST & IDE Remediation (Col-Span 1) ═══ */}
               <BentoCard
+                layout="stacked"
                 name="Deterministic IDE Remediation: Synthesizing Cursor Prompts in Under 30 Seconds"
                 description="How AIVI synthesizes verified AST-level prompts for Cursor IDE and Claude Code to remediate crawler directives and JSON-LD schema with zero manual coding."
                 Icon={Terminal}
@@ -338,20 +350,20 @@ export default function BlogPage() {
                 meta="4 min read • Jul 2026"
                 cta="View AST Prompts"
                 onCtaClick={() => handleOpenDemo("AST Remediation")}
-                className="col-span-3 lg:col-span-1"
-                background={
-                  <div className="absolute inset-0 p-5 opacity-35 group-hover:opacity-75 transition-opacity duration-500">
-                    <div className="p-3 rounded-xl bg-[#07090F] border border-blue-500/30 font-mono text-[10px] space-y-1 backdrop-blur-sm">
-                      <div className="text-neutral-500">// Fix Missing GEO Schema</div>
-                      <div className="text-emerald-400">&gt; npx @aivi/remediate</div>
-                      <div className="text-blue-300">&gt; inject KnowledgeGraph</div>
-                    </div>
+                className="col-span-1"
+                visual={
+                  <div className="p-3 rounded-xl bg-black/50 border border-blue-500/20 font-mono text-[10px] space-y-1">
+                    <div className="text-neutral-500">// Fix Missing GEO Schema</div>
+                    <div className="text-emerald-400">&gt; npx @aivi/remediate</div>
+                    <div className="text-blue-300">&gt; inject KnowledgeGraph</div>
+                    <div className="text-emerald-300 pt-0.5">✓ 4 files updated cleanly</div>
                   </div>
                 }
               />
 
-              {/* ═══ BOX 8: Sub-Minute Hallucination Alerts & SLA Enforcement (Col-Span 2) ═══ */}
+              {/* ═══ BOX 8: Sub-Minute Hallucination Alerts & SLA Enforcement (Col-Span 2, Split Layout) ═══ */}
               <BentoCard
+                layout="split"
                 name="Sub-Minute Hallucination Alerts: Real-Time Pricing & Feature Drift Protection"
                 description="Detecting and mitigating model drift when generative search engines hallucinate deprecated legacy pricing or competitor features during live user sessions."
                 Icon={Activity}
@@ -360,21 +372,19 @@ export default function BlogPage() {
                 meta="5 min read • Jul 2026"
                 cta="Inspect Alert Protocol"
                 onCtaClick={() => handleOpenDemo("Hallucination Alert Protocol")}
-                className="col-span-3 lg:col-span-2"
-                background={
-                  <div className="absolute inset-0 p-6 opacity-35 group-hover:opacity-75 transition-opacity duration-500">
-                    <div className="absolute top-0 right-0 w-72 h-72 bg-amber-500/15 rounded-full blur-3xl" />
-                    <div className="max-w-md ml-auto space-y-2 font-mono text-[11px]">
-                      <div className="p-2.5 rounded-xl bg-[#07090F]/90 border border-amber-500/30 flex items-center justify-between text-xs">
-                        <span className="text-amber-300 flex items-center gap-1.5">
-                          <span className="size-2 rounded-full bg-amber-400 animate-pulse" />
-                          <span>Drift Intercepted</span>
-                        </span>
-                        <span className="text-white font-bold">&lt; 42s Response</span>
-                      </div>
-                      <div className="p-2 rounded-lg bg-black/60 border border-white/10 text-[10px] text-neutral-400">
-                        Entity: Enterprise Pricing Anchor • Status: Schema Overwrite Injected ✓
-                      </div>
+                className="col-span-1 md:col-span-2 lg:col-span-2"
+                visual={
+                  <div className="space-y-2.5 font-mono text-[11px]">
+                    <div className="p-2.5 rounded-xl bg-black/40 border border-amber-500/30 flex items-center justify-between text-xs">
+                      <span className="text-amber-300 flex items-center gap-1.5">
+                        <span className="size-2 rounded-full bg-amber-400 animate-pulse" />
+                        <span>Drift Intercepted</span>
+                      </span>
+                      <span className="text-white font-bold">&lt; 42s Latency</span>
+                    </div>
+                    <div className="p-2.5 rounded-lg bg-black/40 border border-white/5 text-[10px] text-neutral-400 space-y-1">
+                      <div>Entity: <span className="text-neutral-200">Enterprise Pricing Anchor</span></div>
+                      <div>Action: <span className="text-emerald-400">Schema Overwrite Injected ✓</span></div>
                     </div>
                   </div>
                 }
@@ -382,6 +392,7 @@ export default function BlogPage() {
 
               {/* ═══ BOX 9: Multi-Hop RAG Knowledge Graph Synthesis (Col-Span 1) ═══ */}
               <BentoCard
+                layout="stacked"
                 name="Multi-Hop RAG Graph Synthesis: Winning Semantic Triplets"
                 description="How JSON-LD schema entity resolution binds your platform to primary category keywords inside frontier vector databases."
                 Icon={Network}
@@ -390,15 +401,13 @@ export default function BlogPage() {
                 meta="6 min read • Jun 2026"
                 cta="View Graph Architecture"
                 onCtaClick={() => handleOpenDemo("Knowledge Graph Synthesis")}
-                className="col-span-3 lg:col-span-1"
-                background={
-                  <div className="absolute inset-0 p-5 opacity-35 group-hover:opacity-75 transition-opacity duration-500">
-                    <div className="p-3 rounded-xl bg-[#07090F] border border-rose-500/30 font-mono text-[10.5px] space-y-2 backdrop-blur-sm">
-                      <div className="text-rose-400 font-bold"># Semantic Triplet Map</div>
-                      <div className="text-neutral-300 text-[10px]">&gt; Brand (Subject)</div>
-                      <div className="text-emerald-400 text-[10px]">&gt; Authoritative GEO (Predicate)</div>
-                      <div className="text-blue-300 text-[10px]">&gt; Tier-1 Citation (Object)</div>
-                    </div>
+                className="col-span-1"
+                visual={
+                  <div className="p-3 rounded-xl bg-black/50 border border-rose-500/20 font-mono text-[10.5px] space-y-1.5">
+                    <div className="text-rose-400 font-bold border-b border-white/10 pb-1"># Semantic Triplet Map</div>
+                    <div className="text-neutral-300 text-[10px]">&gt; Brand (Subject)</div>
+                    <div className="text-emerald-400 text-[10px]">&gt; Authoritative GEO (Predicate)</div>
+                    <div className="text-blue-300 text-[10px]">&gt; Tier-1 Citation (Object)</div>
                   </div>
                 }
               />
